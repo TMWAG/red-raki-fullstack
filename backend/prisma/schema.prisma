@@ -11,18 +11,53 @@ datasource db {
 }
 
 model Product {
-  id          String    @id @default(uuid())
-  name        String    @map("product_name")
-  desciption  String?   @map("product_descripton")
-  categoryId  String    
-  price       Int
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  category    Category  @relation(fields: [categoryId], references: [id])
+  id              String           @id @default(uuid())
+  name            String           @map("product_name")
+  desciption      String?          @map("product_descripton")
+  categoryId      String
+  price           Int
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  category        Category         @relation(fields: [categoryId], references: [id])
+  orderedProducts OrderedProduct[]
 }
 
 model Category {
-  id          String    @id @default(uuid())
-  name        String    @map("category_name")
-  products    Product[]
+  id       String    @id @default(uuid())
+  name     String    @map("category_name")
+  products Product[]
+}
+
+model Order {
+  id              String           @id @default(uuid())
+  phone           String
+  userPhone       User?            @relation(fields: [phone], references: [phone])
+  address         String
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  orderedProducts OrderedProduct[]
+}
+
+model OrderedProduct {
+  id        String   @id @default(uuid())
+  orderId   String
+  productId String
+  amount    String
+  createdAt DateTime @default(now())
+  order     Order    @relation(fields: [orderId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
+}
+
+model User {
+  id       String    @id @default(uuid())
+  phone    String    @unique
+  password String
+  role     UserRoles @default(BUYER)
+  orders   Order[]
+}
+
+enum UserRoles {
+  BUYER
+  SUPERVISOR
+  ADMIN
 }
