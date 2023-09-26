@@ -52,6 +52,7 @@ model User {
   id       String    @id @default(uuid())
   phone    String    @unique
   password String
+  name     String?
   role     UserRoles @default(BUYER)
   orders   Order[]
 }
