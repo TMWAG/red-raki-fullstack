@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:16-alpine
+    env_file:
+      - ./backend/.env
+    environment:
+      - PG_GATA=/var/lib/postgresql/data
+    volumes:
+      - $HOME/docker/volumes/postgres/:/var/lib/postgresql/data
+
+  backend:
+    container_name: backend
+    env_file:
+      - ./backend/.env
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./backend:/app:rw
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+
+  frontend:
+    container_name: frontend
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./frontend:/app:rw
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+  
