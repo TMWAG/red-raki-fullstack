@@ -14,12 +14,14 @@
   "dependencies": {
     "@fastify/jwt": "^7.2.1",
     "@prisma/client": "^5.3.1",
+    "bcryptjs": "^2.4.3",
     "fastify": "^4.23.2",
     "fastify-zod": "^1.4.0",
     "zod": "^3.22.2",
     "zod-to-json-schema": "^3.21.4"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.4",
     "@types/node": "^20.6.3",
     "nodemon": "^3.0.1",
     "prisma": "^5.3.1",
