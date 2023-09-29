@@ -1,8 +1,22 @@
 import { UserRoles } from "@prisma/client";
+import type { MultipartFile, MultipartValue } from "@fastify/multipart";
 
-export interface JwtPayload {
+interface JwtPayload {
   phone: string;
   role: UserRoles; 
+}
+
+interface IProductInput {
+  name?: MultipartValue<string>;
+  description?: MultipartValue<string>;
+  categoryId?: MultipartValue<string>;
+  price?: MultipartValue<number>;
+  image?: MultipartFile;
+}
+
+interface ICategoryInput {
+  name?: MultipartValue<string>;
+  image?: MultipartFile;
 }
 
 declare module "fastify" {

@@ -5,19 +5,18 @@ import {
 	editCategoryHandler,
 	getCategoriesHandler,
 } from "./category.service";
-import fastifyMultipart, {
-	MultipartFile,
-	MultipartValue,
-} from "@fastify/multipart";
+import fastifyMultipart from "@fastify/multipart";
 import {
 	createCategoryResponseSchema,
+	deleteCategoryInput,
 	getCategoriesResponseSchema,
-  updateCategoryResponseSchema,
+	updateCategoryResponseSchema,
 } from "./category.schema";
+import { ICategoryInput } from "../../@types";
 
 export default async function categoryRoutes(app: FastifyInstance) {
 	app.register(fastifyMultipart, { attachFieldsToBody: true });
-	app.post<{ Body: { name?: MultipartValue<string>; image?: MultipartFile } }>(
+	app.post<{ Body: ICategoryInput }>(
 		"/",
 		{
 			preHandler: [app.authorizeAdminOrSupervisor],
@@ -40,23 +39,23 @@ export default async function categoryRoutes(app: FastifyInstance) {
 		},
 		getCategoriesHandler
 	);
-	app.patch<{ Body: { id?: MultipartValue<string>; name?: MultipartValue<string>; image?: MultipartFile } }>(
-		"/",
-		{ 
-      preHandler: [app.authorizeAdminOrSupervisor],
-      schema: {
-        response: {
-          200: updateCategoryResponseSchema,
-        }
-      }
-    },
+	app.patch<{ Body: ICategoryInput; Params: { id: string } }>(
+		"/:id",
+		{
+			preHandler: [app.authorizeAdminOrSupervisor],
+			schema: {
+				response: {
+					200: updateCategoryResponseSchema,
+				},
+			},
+		},
 		editCategoryHandler
 	);
-	app.delete<{Params: { id: string } }>(
-    "/:id",
-    {
-      preHandler: [app.authorizeAdmin],
-    },
-    deleteCategoryHandler
-  );
+	app.delete<{ Params: deleteCategoryInput }>(
+		"/:id",
+		{
+			preHandler: [app.authorizeAdmin],
+		},
+		deleteCategoryHandler
+	);
 }
