@@ -3,7 +3,7 @@ import { randomUUID } from "crypto";
 import { access, mkdir, writeFile } from "fs/promises";
 import path from "path";
 
-export const baseFilepath = path.join(__dirname, "..", "..", "static");
+export const baseFilepath = path.join(__dirname, "..", "static");
 
 export default async function writeImage(
 	image: MultipartFile,
