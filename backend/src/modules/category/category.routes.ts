@@ -55,7 +55,7 @@ export default async function categoryRoutes(app: FastifyInstance) {
 	app.delete<{Params: { id: string } }>(
     "/:id",
     {
-      // preHandler: [app.authorizeAdmin],
+      preHandler: [app.authorizeAdmin],
     },
     deleteCategoryHandler
   );
