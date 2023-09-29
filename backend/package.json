@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@fastify/jwt": "^7.2.1",
+    "@fastify/multipart": "^7.7.3",
     "@fastify/swagger": "^8.10.1",
     "@fastify/type-provider-typebox": "^3.5.0",
     "@prisma/client": "^5.3.1",
