@@ -1,4 +1,4 @@
-import { Type } from "@sinclair/typebox";
+import { Static, Type } from "@sinclair/typebox";
 
 export const createCategoryResponseSchema = Type.Object({
   id: Type.String(),
@@ -21,4 +21,8 @@ export const updateCategoryResponseSchema = Type.Object({
   image: Type.String(),
 });
 
-export const deleteCategorySchema = Type.String();
+export const deleteCategorySchema = Type.Object({
+  id: Type.String(),
+});
+
+export type deleteCategoryInput = Static<typeof deleteCategorySchema>;
