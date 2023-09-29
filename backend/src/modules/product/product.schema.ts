@@ -5,12 +5,8 @@ const baseProduct = {
   description: Type.Optional(Type.String()),
   categoryId: Type.String(),
   price: Type.Integer(),
+  image: Type.String(),
 };
-
-export const createProductSchema = Type.Object({
-  ...baseProduct,
-});
-export type createProductInput = Static<typeof createProductSchema>;
 
 export const createProductResponseSchema = Type.Object({
   id: Type.String(),
@@ -34,12 +30,6 @@ export const getProductResponseSchema = Type.Object({
   id: Type.String(),
   ...baseProduct,
 });
-
-export const updateProductSchema = Type.Object({
-  id: Type.String(),
-  ...baseProduct,
-})
-export type updateProductInput = Static<typeof updateProductSchema>;
 
 export const updateProductResponseSchema = Type.Object({
   id: Type.String(),
