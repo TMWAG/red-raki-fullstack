@@ -1,19 +1,12 @@
 import { MultipartFile, MultipartValue } from "@fastify/multipart";
-import { randomUUID } from "crypto";
-import { access, mkdir, rm, writeFile } from "fs/promises";
+import { rm } from "fs/promises";
 import path from "path";
 import { FastifyReply, FastifyRequest } from "fastify";
 import prisma from "../../utils/prisma";
-
-const acceptedTypes = [
-	"image/apng",
-	"image/avif",
-	"image/gif",
-	"image/jpeg",
-	"image/png",
-	"image/webp",
-];
-const filepath = path.join(__dirname, "..", "..", "static", "categories");
+import { acceptedTypes } from "../../utils/constants/acceptedTypes";
+import writeImage, { baseFilepath } from "../../utils/writeImage";
+import { ICategoryInput } from "../../@types";
+import { deleteCategoryInput } from "./category.schema";
 
 export async function createCategoryHandler(
 	req: FastifyRequest<{
@@ -30,20 +23,11 @@ export async function createCategoryHandler(
 	if (!req.body.name) {
 		return rep.code(400).send("Необходимо указать название категории");
 	}
-	const filenameChunks = req.body.image.filename.split(".");
-	const extension = filenameChunks[filenameChunks.length - 1];
-	const newFilename = `${randomUUID()}.${extension}`;
-	try {
-		await access(filepath);
-	} catch (e) {
-		await mkdir(filepath, { recursive: true });
-	}
-	await writeFile(
-		path.join(filepath, newFilename),
-		await req.body.image.toBuffer()
-	);
 	const category = await prisma.category.create({
-		data: { name: req.body.name.value, image: newFilename },
+		data: {
+			name: req.body.name.value,
+			image: await writeImage(req.body.image, "categories"),
+		},
 	});
 	return rep.code(201).send(category);
 }
@@ -58,21 +42,18 @@ export async function getCategoriesHandler(
 
 export async function editCategoryHandler(
 	req: FastifyRequest<{
-		Body: {
-			id?: MultipartValue<string>;
-			name?: MultipartValue<string>;
-			image?: MultipartFile;
-		};
+		Body: ICategoryInput;
+		Params: { id: string };
 	}>,
 	rep: FastifyReply
 ) {
 	if (!req.body) {
 		return rep.code(400).send();
 	}
-	if (!req.body.id) {
+	const { id } = req.params; 
+	if (!id) {
 		return rep.code(400).send("Не указан Id категории");
 	}
-	const id = req.body.id.value;
 	const category = await prisma.category.findUnique({
 		where: { id },
 	});
@@ -84,18 +65,7 @@ export async function editCategoryHandler(
 		if (!acceptedTypes.includes(req.body.image.mimetype)) {
 			return rep.code(400).send("Изображение имеет неподдерживаемый формат");
 		}
-		const filenameChunks = req.body.image.filename.split(".");
-		try {
-			await rm(path.join(filepath, filename));
-		} catch (e) {
-			return rep.code(500).send(e);
-		}
-		const extension = filenameChunks[filenameChunks.length - 1];
-		filename = `${randomUUID()}.${extension}`;
-		await writeFile(
-			path.join(filepath, filename),
-			await req.body.image.toBuffer()
-		);
+		filename = await writeImage(req.body.image, "categories");
 	}
 	const updatedCategory = await prisma.category.update({
 		where: { id },
@@ -105,18 +75,18 @@ export async function editCategoryHandler(
 }
 
 export async function deleteCategoryHandler(
-	req: FastifyRequest<{ Params: { id: string } }>,
+	req: FastifyRequest<{ Params: deleteCategoryInput }>,
 	rep: FastifyReply
 ) {
 	const { id } = req.params;
 	if (!id) {
-		return rep.code(400).send('Не указан Id');
+		return rep.code(400).send("Не указан Id");
 	}
 	const toDelete = await prisma.category.findUnique({ where: { id } });
 	if (!toDelete) {
-		return rep.code(404).send('Указанная категория не найдена');
+		return rep.code(404).send("Указанная категория не найдена");
 	}
 	const category = await prisma.category.delete({ where: { id } });
-	await rm(path.join(filepath, category.image));
+	await rm(path.join(baseFilepath, 'categories', category.image));
 	return rep.code(200).send(category.id);
 }
