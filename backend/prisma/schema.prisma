@@ -13,7 +13,7 @@ datasource db {
 model Product {
   id              String           @id @default(uuid())
   name            String           @map("product_name")
-  desciption      String?          @map("product_descripton")
+  description     String?          @map("product_descripton")
   categoryId      String
   price           Int
   createdAt       DateTime         @default(now())
@@ -25,6 +25,7 @@ model Product {
 model Category {
   id       String    @id @default(uuid())
   name     String    @map("category_name")
+  image    String
   products Product[]
 }
 
