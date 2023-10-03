@@ -21,6 +21,7 @@ services:
     volumes:
       - ./backend:/app:rw
     ports:
+      - "5555:5555"
       - "3001:3001"
     depends_on:
       - postgres
