@@ -31,7 +31,7 @@ export async function loginUserHandler(
   }
   return rep.send({
     ...user,
-    token: app.jwt.sign({phone: user.phone, role: user.role })
+    token: app.jwt.sign({ id: user.id })
   });
 }
 
