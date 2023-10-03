@@ -2,8 +2,7 @@ import { UserRoles } from "@prisma/client";
 import type { MultipartFile, MultipartValue } from "@fastify/multipart";
 
 interface JwtPayload {
-  phone: string;
-  role: UserRoles; 
+  id: string;
 }
 
 interface IProductInput {
