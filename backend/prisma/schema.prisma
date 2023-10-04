@@ -35,6 +35,7 @@ model Order {
   phone           String
   userPhone       User?            @relation(fields: [phone], references: [phone])
   address         String
+  total           Int
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   orderedProducts OrderedProduct[]
