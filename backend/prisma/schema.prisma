@@ -26,8 +26,13 @@ model Product {
 model Category {
   id       String    @id @default(uuid())
   name     String    @map("category_name")
-  image    String
   products Product[]
+}
+
+enum OrderStatuses {
+  ACCEPTED
+  IN_DELIVERY
+  DELIVERED
 }
 
 model Order {
@@ -36,6 +41,7 @@ model Order {
   userPhone       User?            @relation(fields: [phone], references: [phone])
   address         String
   total           Int
+  status          OrderStatuses    @default(ACCEPTED)
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   orderedProducts OrderedProduct[]
