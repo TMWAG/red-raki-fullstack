@@ -3,6 +3,7 @@ import type { MultipartFile, MultipartValue } from "@fastify/multipart";
 
 interface JwtPayload {
   id: string;
+  iat: number;
 }
 
 interface IProductInput {
