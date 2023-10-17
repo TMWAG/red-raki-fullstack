@@ -9,6 +9,10 @@ export async function registerUserHandler(
 	rep: FastifyReply
 ) {
   try {
+    const user = await prisma.user.findUnique({ where: { phone: req.body.phone } });
+    if (user) {
+      return rep.code(400).send({ message: 'Пользователь с таким номером телефона уже зарегистрирован' });
+    }
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     return rep.code(201).send(await prisma.user.create({
       data: { ...req.body, password: hashedPassword},
@@ -23,10 +27,7 @@ export async function loginUserHandler(
   rep: FastifyReply,
 ) {
   const user = await prisma.user.findUnique({ where: { phone: req.body.phone }})
-  if (!user) {
-    return rep.code(404).send('Неверно указан телефон или пароль');
-  }
-  if (!await bcrypt.compare(req.body.password, user.password)) {
+  if (!user || !await bcrypt.compare(req.body.password, user.password)) {
     return rep.code(400).send('Неверно указан телефон или пароль');
   }
   return rep.send({
