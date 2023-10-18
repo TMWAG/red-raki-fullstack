@@ -1,34 +1,20 @@
-import { MultipartFile, MultipartValue } from "@fastify/multipart";
-import { rm } from "fs/promises";
-import path from "path";
 import { FastifyReply, FastifyRequest } from "fastify";
 import prisma from "../../utils/prisma";
-import { acceptedTypes } from "../../utils/constants/acceptedTypes";
-import writeImage, { baseFilepath } from "../../utils/writeImage";
-import { ICategoryInput } from "../../@types";
-import { deleteCategoryInput } from "./category.schema";
+import {
+	createCategoryInput,
+	deleteCategoryInput,
+	updateCategoryBodyInput,
+	updateCategoryParamsInput,
+} from "./category.schema";
 
 export async function createCategoryHandler(
 	req: FastifyRequest<{
-		Body: { name?: MultipartValue<string>; image?: MultipartFile };
+		Body: createCategoryInput;
 	}>,
 	rep: FastifyReply
 ) {
-	if (!req.body.image) {
-		return rep.code(400).send("Необходимо прикрепить изображение");
-	}
-	if (!acceptedTypes.includes(req.body.image.mimetype)) {
-		return rep.code(400).send("Изображение имеет неподдерживаемый формат");
-	}
-	if (!req.body.name) {
-		return rep.code(400).send("Необходимо указать название категории");
-	}
-	const category = await prisma.category.create({
-		data: {
-			name: req.body.name.value,
-			image: await writeImage(req.body.image, "categories"),
-		},
-	});
+	const { name } = req.body;
+	const category = await prisma.category.create({ data: { name } });
 	return rep.code(201).send(category);
 }
 
@@ -42,15 +28,13 @@ export async function getCategoriesHandler(
 
 export async function editCategoryHandler(
 	req: FastifyRequest<{
-		Body: ICategoryInput;
-		Params: { id: string };
+		Body: updateCategoryBodyInput;
+		Params: updateCategoryParamsInput;
 	}>,
 	rep: FastifyReply
 ) {
-	if (!req.body) {
-		return rep.code(400).send();
-	}
-	const { id } = req.params; 
+	const { id } = req.params;
+	const { name } = req.body;
 	if (!id) {
 		return rep.code(400).send("Не указан Id категории");
 	}
@@ -60,16 +44,9 @@ export async function editCategoryHandler(
 	if (!category) {
 		return rep.code(404).send(`Категория с Id ${id} не найдена`);
 	}
-	let filename = category.image;
-	if (req.body.image) {
-		if (!acceptedTypes.includes(req.body.image.mimetype)) {
-			return rep.code(400).send("Изображение имеет неподдерживаемый формат");
-		}
-		filename = await writeImage(req.body.image, "categories");
-	}
 	const updatedCategory = await prisma.category.update({
 		where: { id },
-		data: { image: filename, name: req.body.name?.value || category.name },
+		data: { name },
 	});
 	return rep.code(200).send(updatedCategory);
 }
@@ -87,6 +64,5 @@ export async function deleteCategoryHandler(
 		return rep.code(404).send("Указанная категория не найдена");
 	}
 	const category = await prisma.category.delete({ where: { id } });
-	await rm(path.join(baseFilepath, 'categories', category.image));
-	return rep.code(200).send(category.id);
+	return rep.code(200).send({ id : category.id });
 }
