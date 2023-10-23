@@ -18,7 +18,7 @@ app.register(cors, {
 
 app.register(auth);
 
-app.register(routes);
+app.register(routes, { prefix: '/api' });
 
 app.listen(
 	{
