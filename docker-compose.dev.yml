@@ -20,9 +20,9 @@ services:
       dockerfile: Dockerfile.dev
     volumes:
       - ./backend:/app:rw
-    ports:
-      - "5555:5555"
-      - "3001:3001"
+    expose:
+      - 5555
+      - 3001
     depends_on:
       - postgres
 
@@ -32,9 +32,20 @@ services:
       context: ./frontend
       dockerfile: Dockerfile.dev
     volumes:
-      - ./frontend:/app:rw
-    ports:
-      - "3000:3000"
+      - ./frontend:/frontend:rw
+    expose:
+      - 3000
     depends_on:
       - backend
   
+  nginx:
+    container_name: proxy_nginx
+    depends_on:
+      - backend
+      - frontend
+    image: nginx:latest
+    ports:
+      - '80:80'
+    volumes:
+      - ./docker/nginx/:/etc/nginx/conf.d:ro
+      - ./backend/src/static/:/var/www/static:rw
