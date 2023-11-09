@@ -14,7 +14,9 @@ import {
 	getProductInput,
 	getProductResponseSchema,
 	getProductSchema,
+	getProductsInput,
 	getProductsResponseSchema,
+	getProductsSchema,
 	updateProductResponseSchema,
 } from "./product.schema";
 import { IProductInput } from "../../@types";
@@ -36,10 +38,11 @@ export default async function productRoutes(app: FastifyInstance) {
 		},
 		createProductHandler
 	);
-	app.get(
+	app.get<{ Querystring: getProductsInput }>(
 		"/",
 		{
 			schema: {
+				querystring: getProductsSchema,
 				response: {
 					200: getProductsResponseSchema,
 				},
