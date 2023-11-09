@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { deleteProductInput, getProductInput } from "./product.schema";
+import { deleteProductInput, getProductInput, getProductsInput } from "./product.schema";
 import prisma from "../../utils/prisma";
 import { IProductInput } from "../../@types";
 import writeImage, { baseFilepath } from "../../utils/writeImage";
@@ -57,12 +57,13 @@ export async function createProductHandler(
 }
 
 export async function getAllProductsHandler(
-	req: FastifyRequest,
+	req: FastifyRequest<{ Querystring: getProductsInput }>,
 	rep: FastifyReply
 ) {
+	const { categoryId } = req.query;
 	return rep.code(200).send({
 		count: await prisma.product.count(),
-		products: await prisma.product.findMany(),
+		products: await prisma.product.findMany({ where: { categoryId }}),
 	});
 }
 
