@@ -13,6 +13,11 @@ export const createProductResponseSchema = Type.Object({
   ...baseProduct,
 })
 
+export const getProductsSchema = Type.Object({
+  categoryId: Type.Optional(Type.String()),
+});
+export type getProductsInput = Static<typeof getProductsSchema>;
+
 export const getProductsResponseSchema = Type.Object({
   count: Type.Integer(),
   products: Type.Array(Type.Object({
