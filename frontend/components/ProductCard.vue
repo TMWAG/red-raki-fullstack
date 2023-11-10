@@ -66,15 +66,14 @@ const editButtonsVisibility = computed(() => {
 </template>
 
 <style lang="scss" scoped>
-@use "/assets/colors";
 .product_card {
 	display: grid;
 	grid-template-rows: 4fr 1fr 1fr 1fr;
 	justify-content: center;
 	text-align: center;
-	border: 2px solid colors.$accent;
+	border: 2px solid $accent;
 	border-radius: 3px;
-	background-color: colors.$white;
+	background-color: $white;
 	padding: 1rem;
 	.product {
 		&_picture {
@@ -83,7 +82,7 @@ const editButtonsVisibility = computed(() => {
 			align-self: center;
 		}
 		&_name {
-			color: colors.$accent;
+			color: $accent;
 			font-size: 1.5rem;
 			font-weight: 500;
 		}
@@ -93,15 +92,15 @@ const editButtonsVisibility = computed(() => {
 		&_price {
 			span {
 				font-size: 1.25rem;
-				color: colors.$primary;
+				color: $primary;
 			}
 		}
 	}
 }
 .add_button {
-	border: 2px solid colors.$accent;
+	border: 2px solid $accent;
 	border-radius: 3px;
-	background-color: colors.$white;
+	background-color: $white;
 	font-size: 1rem;
 	transition: scale ease-in-out 0.2s;
 	padding: 0.25rem;
@@ -114,7 +113,7 @@ const editButtonsVisibility = computed(() => {
 		display: grid;
 		align-items: stretch;
 		grid-template-columns: repeat(3, 1fr);
-		border: 2px solid colors.$accent;
+		border: 2px solid $accent;
 		border-radius: 3px;
 		button {
 			font-size: 1.5rem;
@@ -128,7 +127,7 @@ const editButtonsVisibility = computed(() => {
 		}
 		span {
 			font-size: 1.5rem;
-			border: 2px solid colors.$accent;
+			border: 2px solid $accent;
 			border-top: none;
 			border-bottom: none;
 		}

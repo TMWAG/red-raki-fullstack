@@ -178,7 +178,6 @@ const onCreateProduct = async () => {
 </template>
 
 <style lang="scss" scoped>
-@use "/assets/colors";
 @use "sass:color";
 .form_wrapper {
 	display: flex;
@@ -205,25 +204,25 @@ const onCreateProduct = async () => {
 		padding: 0.25rem;
 		margin: 0.25rem;
 		border-radius: 3px;
-		border: 2px solid colors.$accent;
+		border: 2px solid $accent;
 		transition: border-color, scale ease-in-out 0.3s;
 		&:focus {
-			border-color: colors.$primary;
+			border-color: $primary;
 			outline: none;
 			transition: border-color, scale ease-in-out 0.3s;
 			scale: 105%;
 		}
 		&::placeholder {
 			font-size: 1.25rem;
-			color: colors.$accent;
+			color: $accent;
 			opacity: 0.75;
 		}
 		&:invalid {
-			background-color: color.adjust($color: colors.$warn, $alpha: -0.8);
+			background-color: color.adjust($color: $warn, $alpha: -0.8);
 		}
 	}
 	.error {
-		color: colors.$warn;
+		color: $warn;
 		text-align: center;
 		font-size: 0.9rem;
 	}
@@ -233,13 +232,13 @@ const onCreateProduct = async () => {
 	height: 2rem;
 	width: fit-content;
 	padding: 0 0.25rem;
-	border: 2px solid colors.$accent;
+	border: 2px solid $accent;
 	border-radius: 3px;
 	background-color: white;
 	transition: border-color, scale ease-in-out 0.3s;
 	&:hover {
 		scale: 105%;
-		border-color: colors.$primary;
+		border-color: $primary;
 		transition: border-color, scale ease-in-out 0.3s;
 	}
 }

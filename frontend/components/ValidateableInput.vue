@@ -24,8 +24,7 @@ defineProps<{
 </template>
 
 <style lang="scss" scoped>
-@use '/assets/colors';
-@use 'sass:color';
+@use "sass:color";
 .input {
   font-size: 1rem;
   width: min-content;
@@ -40,25 +39,25 @@ defineProps<{
     padding: .25rem;
     margin: .25rem;
     border-radius: 3px;
-    border: 2px solid colors.$accent;
+    border: 2px solid $accent;
     transition: border-color, scale ease-in-out 0.3s;
     &:focus {
-      border-color: colors.$primary;
+      border-color: $primary;
       outline: none;
       transition: border-color, scale ease-in-out 0.3s;
       scale: 105%;
     }
     &::placeholder {
       font-size: 1.25rem;
-      color: colors.$accent;
+      color: $accent;
       opacity: .75;
     }
     &:invalid {
-      background-color: color.adjust($color: colors.$warn, $alpha: -0.8);
+      background-color: color.adjust($color: $warn, $alpha: -0.8);
     }
   }
   .error {
-    color: colors.$warn;
+    color: $warn;
     text-align: center;
     font-size: .9rem;
   }

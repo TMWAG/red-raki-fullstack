@@ -22,8 +22,6 @@ const store = useNotificationStore();
 </template>
 
 <style lang="scss" scoped>
-@use "assets/colors";
-
 .wrapper {
 	display: flex;
 	flex-direction: column;
@@ -40,7 +38,7 @@ const store = useNotificationStore();
 	height: fit-content;
 	border: 2px solid;
 	border-radius: 5px;
-	background-color: colors.$white;
+	background-color: $white;
 	& .header {
 		padding: 0.25rem;
 		display: flex;
@@ -59,18 +57,18 @@ const store = useNotificationStore();
 	}
 }
 .error {
-	border-color: colors.$warn;
-	color: colors.$warn;
+	border-color: $warn;
+	color: $warn;
 }
 
 .info {
-	border-color: colors.$accent;
-	color: colors.$accent;
+	border-color: $accent;
+	color: $accent;
 }
 
 .warning {
-	border-color: colors.$secondary;
-	color: colors.$secondary;
+	border-color: $secondary;
+	color: $secondary;
 }
 
 .v-enter-active,

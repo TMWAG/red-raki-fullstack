@@ -153,8 +153,6 @@ const register = async (e: MouseEvent) => {
 </template>
 
 <style lang="scss" scoped>
-@use "/assets/colors";
-@use "sass:color";
 span {
 	font-size: 1.5rem;
 }
@@ -163,26 +161,26 @@ span {
 	height: 2rem;
 	width: fit-content;
 	padding: 0.25rem;
-	border: 2px solid colors.$accent;
+	border: 2px solid $accent;
 	border-radius: 3px;
 	background-color: white;
 	transition: border-color, scale ease-in-out 0.3s;
 	margin-bottom: 0.5rem;
 	&:hover {
 		scale: 105%;
-		border-color: colors.$primary;
+		border-color: $primary;
 		transition: border-color, scale ease-in-out 0.3s;
 	}
 	&:disabled {
-		background-color: colors.$white;
+		background-color: $white;
 		cursor: not-allowed;
 	}
 	&:disabled:hover {
 		scale: 100%;
-		border-color: colors.$accent;
+		border-color: $accent;
 	}
 	&.active {
-		border-color: colors.$primary;
+		border-color: $primary;
 		transition: border-color, scale ease-in-out 0.3s;
 	}
 }
@@ -192,18 +190,18 @@ span {
 	flex-direction: column;
 	align-items: center;
 	justify-content: space-between;
-	border: 2px solid colors.$accent;
+	border: 2px solid $accent;
 	border-radius: 5px;
-	background-color: colors.$white;
+	background-color: $white;
 	padding: 1rem;
 }
 .nav_link {
 	text-decoration: none;
 	background-image: linear-gradient(
 		to right,
-		colors.$primary,
-		colors.$primary 50%,
-		colors.$warn 50%
+		$primary,
+		$primary 50%,
+		$warn 50%
 	);
 	background-size: 200% 100%;
 	background-position: -100%;
@@ -215,7 +213,7 @@ span {
 	transition: all 0.3s ease-in-out;
 	&:before {
 		content: "";
-		background: colors.$primary;
+		background: $primary;
 		display: block;
 		position: absolute;
 		bottom: -3px;

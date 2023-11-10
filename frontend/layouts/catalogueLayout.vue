@@ -165,7 +165,7 @@ useHead({
 		transition: border-color, scale ease-in-out 0.3s;
 	}
 }
-.nav_link {
+	.nav_link {
 	text-decoration: none;
 	background-image: linear-gradient(
 		to right,

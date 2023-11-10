@@ -86,8 +86,6 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-@use "assets/colors";
-
 .form_wrapper {
 	display: flex;
 	flex-direction: column;
@@ -99,13 +97,13 @@ onMounted(() => {
 		height: 2rem;
 		width: fit-content;
 		padding: 0 0.25rem;
-		border: 2px solid colors.$accent;
+		border: 2px solid $accent;
 		border-radius: 3px;
 		background-color: white;
 		transition: border-color, scale ease-in-out 0.3s;
 		&:hover {
 			scale: 105%;
-			border-color: colors.$primary;
+			border-color: $primary;
 			transition: border-color, scale ease-in-out 0.3s;
 		}
 	}

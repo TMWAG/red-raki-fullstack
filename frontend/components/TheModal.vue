@@ -22,10 +22,9 @@ const emit = defineEmits<{
 </template>
 
 <style lang="scss" scoped>
-@use "assets/colors";
 @use "sass:color";
 .modal_background {
-	background-color: color.adjust(colors.$accent, $alpha: -0.5);
+	background-color: color.adjust($accent, $alpha: -0.5);
 	position: absolute;
 	width: 100vw;
 	height: 100vh;
@@ -36,14 +35,14 @@ const emit = defineEmits<{
 	align-items: center;
 	justify-content: center;
 	.modal {
-		border: 2px solid colors.$accent;
+		border: 2px solid $accent;
 		border-radius: 5px;
-		background-color: colors.$white;
+		background-color: $white;
 		.modal_header {
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			border-bottom: 1px solid colors.$accent;
+			border-bottom: 1px solid $accent;
 			p {
 				font-size: 1.25rem;
 				padding: 0.25rem;

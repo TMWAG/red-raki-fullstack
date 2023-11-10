@@ -46,10 +46,9 @@ const onAddressChange = (e: Event) => {};
 </template>
 
 <style lang="scss" scoped>
-@use "/assets/colors";
 .confirm_order {
-	background-color: colors.$white;
-	border: 2px solid colors.$accent;
+	background-color: $white;
+	border: 2px solid $accent;
 	border-radius: 5px;
 	padding: 1rem;
 	display: grid;
@@ -60,23 +59,23 @@ const onAddressChange = (e: Event) => {};
 		height: 2rem;
 		width: fit-content;
 		padding: 0.25rem;
-		border: 2px solid colors.$accent;
+		border: 2px solid $accent;
 		border-radius: 3px;
 		background-color: white;
 		transition: border-color, scale ease-in-out 0.3s;
 		margin: 0.25rem;
 		&:hover {
 			scale: 105%;
-			border-color: colors.$primary;
+			border-color: $primary;
 			transition: border-color, scale ease-in-out 0.3s;
 		}
 		&:disabled {
-			background-color: colors.$white;
+			background-color: $white;
 			cursor: not-allowed;
 		}
 		&:disabled:hover {
 			scale: 100%;
-			border-color: colors.$accent;
+			border-color: $accent;
 		}
 	}
 }
