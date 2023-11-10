@@ -15,10 +15,19 @@ export default defineNuxtConfig({
       container: process.env.CONTAINER,
     },
   },
+  vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: '@use "/assets/colors.scss" as *;'
+        },
+      },
+    },
+  },
   components: [
     {
       path: '~/components',
       pathPrefix: true,
-    }
+    },
   ],
 })
