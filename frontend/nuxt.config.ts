@@ -15,4 +15,10 @@ export default defineNuxtConfig({
       container: process.env.CONTAINER,
     },
   },
+  components: [
+    {
+      path: '~/components',
+      pathPrefix: true,
+    }
+  ],
 })
