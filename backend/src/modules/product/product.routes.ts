@@ -7,7 +7,7 @@ import {
 	updateProductHandler,
 } from "./product.service";
 import {
-	createProductResponseSchema,
+	createProductSuccessResponseSchema,
 	deleteProductInput,
 	deleteProductResponseSchema,
 	deleteProductSchema,
@@ -21,6 +21,7 @@ import {
 } from "./product.schema";
 import { IProductInput } from "../../@types";
 import fastifyMultipart from "@fastify/multipart";
+import { errorResponseSchema } from "../../utils/errorResponseSchema";
 
 export default async function productRoutes(app: FastifyInstance) {
 	app.register(fastifyMultipart, { attachFieldsToBody: true });
@@ -32,7 +33,10 @@ export default async function productRoutes(app: FastifyInstance) {
 			preHandler: [app.authorizeAdminOrSupervisor],
 			schema: {
 				response: {
-					201: createProductResponseSchema,
+					201: createProductSuccessResponseSchema,
+					400: errorResponseSchema,
+					403: errorResponseSchema,
+					404: errorResponseSchema,
 				},
 			},
 		},
@@ -57,6 +61,7 @@ export default async function productRoutes(app: FastifyInstance) {
 				params: getProductSchema,
 				response: {
 					200: getProductResponseSchema,
+					404: errorResponseSchema,
 				},
 			},
 		},
@@ -69,6 +74,9 @@ export default async function productRoutes(app: FastifyInstance) {
 			schema: {
 				response: {
 					200: updateProductResponseSchema,
+					400: errorResponseSchema,
+					403: errorResponseSchema,
+					404: errorResponseSchema,
 				},
 			},
 		},
@@ -82,6 +90,8 @@ export default async function productRoutes(app: FastifyInstance) {
 				params: deleteProductSchema,
 				response: {
 					200: deleteProductResponseSchema,
+					403: errorResponseSchema,
+					404: errorResponseSchema,
 				},
 			},
 		},
