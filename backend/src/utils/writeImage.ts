@@ -7,7 +7,7 @@ export const baseFilepath = path.join(__dirname, "..", "static");
 
 export default async function writeImage(
 	image: MultipartFile,
-	destinationFolder: string
+	destinationFolder: 'products',
 ): Promise<string> {
   const filenameChunks = image.filename.split(".");
 	const extension = filenameChunks[filenameChunks.length - 1];
