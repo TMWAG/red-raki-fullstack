@@ -3,14 +3,14 @@ import { Static, Type } from "@sinclair/typebox";
 const baseProduct = {
   name: Type.String(),
   description: Type.Optional(Type.String()),
+  notes: Type.Optional(Type.String()),
   categoryId: Type.String(),
   price: Type.Integer(),
   image: Type.String(),
 };
 
-export const createProductResponseSchema = Type.Object({
-  id: Type.String(),
-  ...baseProduct,
+export const createProductSuccessResponseSchema = Type.Object({
+  message: Type.String(),
 })
 
 export const getProductsSchema = Type.Object({
