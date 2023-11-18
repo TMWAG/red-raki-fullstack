@@ -10,7 +10,8 @@ const baseProduct = {
 };
 
 export const createProductSuccessResponseSchema = Type.Object({
-  message: Type.String(),
+  id: Type.String(),
+  ...baseProduct,
 })
 
 export const getProductsSchema = Type.Object({
