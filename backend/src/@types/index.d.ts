@@ -7,11 +7,21 @@ interface JwtPayload {
 }
 
 interface IProductInput {
-  name?: MultipartValue<string>;
-  description?: MultipartValue<string>;
   categoryId?: MultipartValue<string>;
-  price?: MultipartValue<number>;
+  description?: MultipartValue<string>;
   image?: MultipartFile;
+  name?: MultipartValue<string>;
+  notes?: MultipartValue<string>;
+  price?: MultipartValue<number>;
+}
+
+interface ICreateProduct {
+  categoryId: string;
+  description?: string;
+  image: MultipartFile;
+  name: string;
+  notes?: string;
+  price: number;
 }
 
 interface ICategoryInput {
