@@ -1,65 +1,80 @@
 <script setup lang="ts">
-import { InputHTMLAttributes } from 'vue';
 defineProps<{
-  label: string;
-  type: InputHTMLAttributes['type'];
-  placeholder?: string;
-  value: string | File | undefined;
-  pattern?: string;
-  error: string | undefined;
+	label: string;
 }>();
+const val = ref<string>("");
+const id = `input-${String(Math.floor(Math.random() * 1000))}`;
 </script>
 
 <template>
-<label class="input">
-  {{ label }}
-  <input
-    :type="type"
-    :placeholder="placeholder"
-    :pattern="pattern"
-    :value="value"
-  />
-  <span class="error">{{ error }}</span>
-</label>
+	<div class="labeled-input">
+		<label :for="id" class="labeled-input__label">
+			{{ label }}
+		</label>
+		<slot :id="id">
+			<input
+				:id="id"
+				class="labeled-input__input"
+				type="text"
+				v-model="val"
+				placeholder="placeholder"
+			/>
+		</slot>
+	</div>
 </template>
 
-<style lang="scss" scoped>
-@use "sass:color";
-.input {
-  font-size: 1rem;
-  width: min-content;
-  display: flex;
-  flex-direction: column;
-  align-items: baseline;
-  justify-content: flex-start;
-  & input {
-    font-size: 1.25rem;
-    height: 3rem;
-    width: 20rem;
-    padding: .25rem;
-    margin: .25rem;
-    border-radius: 3px;
-    border: 2px solid $accent;
-    transition: border-color, scale ease-in-out 0.3s;
-    &:focus {
-      border-color: $primary;
+<style lang="scss">
+.labeled-input {
+	display: flex;
+	flex-direction: column;
+	position: relative;
+	margin-bottom: 11px;
+	&:last-child {
+		margin-bottom: 0;
+	}
+	&__label {
+		color: #591c21;
+		font-family: "Raleway";
+		font-size: 14px;
+		font-style: normal;
+		font-weight: 500;
+		line-height: normal;
+		letter-spacing: 0.28px;
+		padding-bottom: 8px;
+	}
+	&__input {
+		width: 374px;
+		height: 38px;
+		border-radius: 8px;
+		border: 1px solid #c0979b;
+		background-color: #fbfbfb;
+    color: #121212;
+    padding: 8px 13px;
+		transition: border-color ease 0.2s;
+		font-family: 'Sans Serif';
+		&:focus {
+      border-color: #591c21;
       outline: none;
-      transition: border-color, scale ease-in-out 0.3s;
-      scale: 105%;
-    }
-    &::placeholder {
-      font-size: 1.25rem;
-      color: $accent;
-      opacity: .75;
-    }
-    &:invalid {
-      background-color: color.adjust($color: $warn, $alpha: -0.8);
-    }
-  }
-  .error {
-    color: $warn;
-    text-align: center;
-    font-size: .9rem;
-  }
+		}
+		&::placeholder {
+			color: rgba(148, 148, 148, 0.5);
+			font-family: Open Sans;
+			font-size: 16px;
+			font-style: normal;
+			font-weight: 400;
+			line-height: normal;
+		}
+	}
+	&__switch {
+		position: absolute;
+		top: 41%;
+		right: 3.5%;
+		width: 24px;
+		height: 38px;
+		background-color: transparent;
+		border: none;
+		outline: none;
+		cursor: pointer;
+	}
 }
 </style>
