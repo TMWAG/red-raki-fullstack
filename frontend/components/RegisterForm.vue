@@ -95,8 +95,9 @@ const register = async (e: MouseEvent) => {
 	<form class="register-form">
 		<span class="register-form__header">Регистрация</span>
 		<div class="register-form__inputs">
-			<ValidateableInput label="Номер телефона">
+			<ValidateableInput label="Номер телефона" v-slot="s">
 				<input
+					:id="s.id"
 					type="tel"
 					class="labeled-input__input"
 					placeholder="+7 (___) ___ - __ - __"
@@ -108,8 +109,9 @@ const register = async (e: MouseEvent) => {
 					@focus="checkPhoneValidity"
 				/>
 			</ValidateableInput>
-			<ValidateableInput label="Пароль">
+			<ValidateableInput label="Пароль" v-slot="s">
 				<input
+					:id="s.id"
 					:type="passwordInputType"
 					class="labeled-input__input"
 					placeholder="VaSh_PaRol_123"
@@ -179,8 +181,9 @@ const register = async (e: MouseEvent) => {
 					</svg>
 				</button>
 			</ValidateableInput>
-			<ValidateableInput label="Пароль ещё раз">
+			<ValidateableInput label="Пароль ещё раз" v-slot="s">
 				<input
+					:id="s.id"
 					:type="passwordInputType"
 					class="labeled-input__input"
 					placeholder="VaSh_PaRol_123"
@@ -244,7 +247,7 @@ const register = async (e: MouseEvent) => {
 	}
 	&__error {
 		color: #d40000;
-		font-family: 'Raleway';
+		font-family: "Raleway";
 		font-size: 13px;
 		font-style: normal;
 		font-weight: 500;
