@@ -83,8 +83,9 @@ const login = async (e: MouseEvent) => {
 	<form class="login-form">
 		<span class="login-form__header">Вход</span>
 		<div class="login-form__inputs">
-			<ValidateableInput label="Номер телефона">
+			<ValidateableInput label="Номер телефона" v-slot="s">
 				<input
+					:id="s.id"
 					type="tel"
 					class="labeled-input__input"
 					placeholder="+7 (___) ___ - __ - __"
@@ -95,8 +96,9 @@ const login = async (e: MouseEvent) => {
 					data-maska="+7 (###) ### - ## - ##"
 				/>
 			</ValidateableInput>
-			<ValidateableInput label="Пароль">
+			<ValidateableInput label="Пароль" v-slot="s">
 				<input
+					:id="s.id"
 					:type="passwordInputType"
 					class="labeled-input__input"
 					placeholder="* * * * * * * * *"
