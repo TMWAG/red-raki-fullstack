@@ -1,9 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/2.0.0/modern-normalize.min.css');
 *{
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  font-family: 'Ubuntu';
+  font-family: 'Raleway', 'Open Sans', 'Ubuntu';
+}
+html {
+  background-color: #F5F5F2;
 }
 
