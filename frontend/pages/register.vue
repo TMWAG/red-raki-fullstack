@@ -12,8 +12,8 @@ useHead({
 
 <style lang="scss" scoped>
 .auth {
-	margin: 2rem auto;
-	width: 60%;
+	padding-top: 55px;
+	margin: 0 auto;
 	display: flex;
 	align-items: center;
 	justify-content: center;
