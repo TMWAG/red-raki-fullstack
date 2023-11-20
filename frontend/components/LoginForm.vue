@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { Mask } from "maska";
 import { ILoginUserResponse } from "~/@types";
+const mask = new Mask({ mask: "+7 (###) ### - ## - ##" });
 
 const { $backendUrl } = useNuxtApp();
 
@@ -12,16 +14,11 @@ const password = ref<string>("");
 const passwordError = ref<string>("");
 
 const passwordInputType = ref<"password" | "text">("password");
-const showPasswordButtonText = ref<"Показать пароль" | "Скрыть пароль">(
-	"Показать пароль"
-);
 
 const onPhoneChange = (e: Event) => {
 	const target = e.target as HTMLInputElement;
-	if (target.validity.patternMismatch) {
-		phoneError.value = "Телефон имеет неверный формат";
-	} else if (target.value.length === 0) {
-		phoneError.value += " телефон необходимо указать";
+	if (target.value.length === 0) {
+		phoneError.value += "Телефон необходимо указать";
 	} else {
 		phoneError.value = "";
 	}
@@ -44,12 +41,14 @@ const onPasswordChange = (e: Event) => {
 const togglePasswordVisibility = (e: MouseEvent) => {
 	if (passwordInputType.value === "password") {
 		passwordInputType.value = "text";
-		showPasswordButtonText.value = "Скрыть пароль";
 	} else {
 		passwordInputType.value = "password";
-		showPasswordButtonText.value = "Показать пароль";
 	}
 };
+
+const isLoginDisabled = computed(() => {
+	return !Boolean(password.value && phone.value);
+});
 
 const login = async (e: MouseEvent) => {
 	const data = await $fetch<ILoginUserResponse>(
@@ -60,12 +59,12 @@ const login = async (e: MouseEvent) => {
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
-				phone: phone.value,
+				phone: mask.unmasked(phone.value),
 				password: password.value,
 			}),
 		}
 	).catch((e) =>
-		notificationStore.addErrorNotification("Ошибка авторизации!", e)
+		notificationStore.addErrorNotification(e.data.message, e.data.detail)
 	);
 	if (data) {
 		useCookie("role").value = data.role;
@@ -81,127 +80,166 @@ const login = async (e: MouseEvent) => {
 </script>
 
 <template>
-	<div class="wrapper">
-		<span>Вход</span>
-		<ValidateableInput
-			label="Номер телефона"
-			type="tel"
-			placeholder="+79993332211"
-			:value="phone"
-			pattern="^((\+7|7|8)+([0-9]){10})$"
-			@input="onPhoneChange"
-			:error="phoneError"
-		/>
-		<ValidateableInput
-			label="Пароль"
-			:type="passwordInputType"
-			placeholder="VaSh_PaRol'"
-			:value="password"
-			pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$"
-			@input="onPasswordChange"
-			:error="passwordError"
-		/>
+	<form class="login-form">
+		<span class="login-form__header">Вход</span>
+		<div class="login-form__inputs">
+			<ValidateableInput label="Номер телефона">
+				<input
+					type="tel"
+					class="labeled-input__input"
+					placeholder="+7 (___) ___ - __ - __"
+					:value="phone"
+					@input="onPhoneChange"
+					autocomplete="tel-national"
+					v-maska
+					data-maska="+7 (###) ### - ## - ##"
+				/>
+			</ValidateableInput>
+			<ValidateableInput label="Пароль">
+				<input
+					:type="passwordInputType"
+					class="labeled-input__input"
+					placeholder="* * * * * * * * *"
+					autocomplete="current-password"
+					:value="password"
+					@input="onPasswordChange"
+				/>
+				<button
+					class="labeled-input__switch"
+					:class="passwordInputType === 'text' ? 'active' : ''"
+					@click.prevent="togglePasswordVisibility"
+				>
+					<svg
+						v-if="passwordInputType === 'text'"
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path
+							d="M4 4L20 20"
+							stroke="#C8C8C8"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						/>
+						<path
+							d="M10.8572 5.76588C11.2304 5.72237 11.6116 5.70001 12 5.70001C16.1976 5.70001 19.5599 8.31239 21 12C20.6449 12.9094 20.1728 13.7534 19.6002 14.5089M7.06766 7.0675C5.23159 8.18766 3.811 9.92334 3 12C4.44012 15.6876 7.80243 18.3 12 18.3C13.8338 18.3 15.5082 17.8014 16.9325 16.9324M10.0909 10.0907C9.60224 10.5794 9.3 11.2544 9.3 12C9.3 13.4912 10.5088 14.7 12 14.7C12.7456 14.7 13.4207 14.3978 13.9093 13.9091"
+							stroke="#C8C8C8"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						/>
+						<path
+							d="M4.79999 4.79999L19.2 19.2"
+							stroke="#C8C8C8"
+							stroke-width="2"
+							stroke-linecap="round"
+						/>
+					</svg>
+					<svg
+						v-else
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<g style="mix-blend-mode: multiply">
+							<path
+								d="M14.7 12C14.7 13.4911 13.4912 14.7 12 14.7C10.5088 14.7 9.3 13.4911 9.3 12C9.3 10.5088 10.5088 9.29995 12 9.29995C13.4912 9.29995 14.7 10.5088 14.7 12Z"
+								stroke="#C8C8C8"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							/>
+							<path
+								d="M3 12C4.44012 8.31233 7.80243 5.69995 12 5.69995C16.1976 5.69995 19.5599 8.31233 21 12C19.5599 15.6876 16.1976 18.3 12 18.3C7.80243 18.3 4.44012 15.6876 3 12Z"
+								stroke="#C8C8C8"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							/>
+						</g>
+					</svg>
+				</button>
+			</ValidateableInput>
+		</div>
 		<button
-			class="button"
-			:class="passwordInputType === 'text' ? 'active' : ''"
-			@click="togglePasswordVisibility"
+			class="login-form__button"
+			@click.prevent="login"
+			:disabled="isLoginDisabled"
 		>
-			{{ showPasswordButtonText }}
+			Войти
 		</button>
-		<button class="button" @click="login">Войти</button>
-		<NuxtLink to="/register" class="nav_link" active-class="active"
-			>Зарегистрироваться</NuxtLink
-		>
-	</div>
+		<UITheLink to="/register" class="login-form__link">
+			Зарегистрироваться
+		</UITheLink>
+	</form>
 </template>
 
-<style lang="scss" scoped>
-span {
-	font-size: 1.5rem;
-}
-.button {
-	font-size: 1rem;
-	height: 2rem;
-	width: fit-content;
-	padding: 0.25rem;
-	border: 2px solid $accent;
-	border-radius: 3px;
-	background-color: white;
-	transition: border-color, scale ease-in-out 0.3s;
-	margin-bottom: 0.5rem;
-	&:hover {
-		scale: 105%;
-		border-color: $primary;
-		transition: border-color, scale ease-in-out 0.3s;
-	}
-	&:disabled {
-		background-color: $white;
-		cursor: not-allowed;
-	}
-	&:disabled:hover {
-		scale: 100%;
-		border-color: $accent;
-	}
-	&.active {
-		border-color: $primary;
-		transition: border-color, scale ease-in-out 0.3s;
-	}
-}
-.wrapper {
-	height: 40rem;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: space-between;
-	border: 2px solid $accent;
-	border-radius: 5px;
-	background-color: $white;
-	padding: 1rem;
-}
-.nav_link {
-	text-decoration: none;
-	background-image: linear-gradient(
-		to right,
-		$primary,
-		$primary 50%,
-		$warn 50%
-	);
-	background-size: 200% 100%;
-	background-position: -100%;
-	display: inline-block;
-	position: relative;
-	-webkit-background-clip: text;
-	background-clip: text;
-	-webkit-text-fill-color: transparent;
-	transition: all 0.3s ease-in-out;
-	&:before {
-		content: "";
-		background: $primary;
+<style lang="scss">
+.login-form {
+	width: 434px;
+	height: 360px;
+	background-color: #ebe3e1;
+	border-radius: 20px;
+	padding: 0 32px 0 29px;
+	&__header {
 		display: block;
-		position: absolute;
-		bottom: -3px;
-		left: 0;
-		width: 0;
-		height: 3px;
-		transition: all 0.3s ease-in-out;
+		height: min-content;
+		width: min-content;
+		color: #591c21;
+		text-align: center;
+		font-family: "Raleway";
+		font-size: 24px;
+		font-style: normal;
+		font-weight: 700;
+		line-height: normal;
+		padding: 26px 0 29px 159px;
 	}
-	&:hover {
-		background-position: 0;
+	&__inputs {
+		padding-bottom: 26px;
 	}
-	&:hover::before {
-		width: 100%;
-	}
-	&:focus {
-		background-position: 0;
-	}
-	&:focus::before {
-		width: 100%;
-	}
-	&.active {
-		background-position: 0;
-		&::before {
-			width: 100%;
+	&__button {
+		width: 374px;
+		height: 48px;
+		background-color: #591c21;
+		color: #fbfbfb;
+		border-radius: 8px;
+		border: none;
+		outline: none;
+		transition: all ease 0.2s;
+		margin-bottom: 16px;
+		text-align: center;
+		font-family: "Raleway";
+		font-size: 20px;
+		font-style: normal;
+		font-weight: 600;
+		line-height: normal;
+		cursor: pointer;
+		&:hover {
+			transform: scale(101%);
 		}
+		&:disabled {
+			color: #fbfbfb80;
+			background-color: #7b6063;
+			cursor: not-allowed;
+		}
+		&:disabled:hover {
+			transform: none;
+		}
+	}
+	&__link {
+		margin-left: 96px;
+		font-weight: 600;
+		background-image: linear-gradient(
+			to right,
+			#591c21,
+			#591c21 50%,
+			#911d28 50%
+		);
 	}
 }
 </style>
