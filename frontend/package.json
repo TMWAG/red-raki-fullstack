@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@pinia/nuxt": "^0.5.0",
+    "maska": "^2.1.10",
     "pinia": "^2.1.7"
   }
 }
