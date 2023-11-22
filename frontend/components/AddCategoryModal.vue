@@ -11,17 +11,15 @@ const notificationStore = useNotificationStore();
 
 const name = ref<string>("");
 const nameError = ref<string>("");
-const onNameUpdate = (e: Event) => {
-	const { value } = e.target as HTMLInputElement;
-	if (value.length === 0) {
+function validateName() {
+	if (name.value.length === 0) {
 		nameError.value = "Название необходимо указать";
 	} else {
 		nameError.value = "";
 	}
-	name.value = value;
-};
+}
 
-const addCategory = async () => {
+async function addCategory() {
 	await $fetch<ICategory>(`${$backendUrl()}/api/category`, {
 		method: "POST",
 		body: JSON.stringify({
@@ -34,9 +32,9 @@ const addCategory = async () => {
 		notificationStore.addErrorNotification("Ошибка добавления", e)
 	);
 	emit("category-created");
-};
+}
 
-const onModalClose = () => {
+function onModalClose() {
 	name.value = "";
 	nameError.value = "";
 	emit("canceled");
@@ -45,17 +43,22 @@ const onModalClose = () => {
 
 <template>
 	<TheModal header="Добавление категории" @close="onModalClose">
-		<div class="form_wrapper">
-			<ValidateableInput
-				label="Название новой категории"
-				type="text"
-				placeholder="Раки"
-				:error="nameError"
-				:value="name"
-				@input="onNameUpdate"
-			/>
+		<div class="add-category-modal">
+			<ValidateableInput label="Название новой категории" lg>
+				<input
+					placeholder="Раки"
+					type="text"
+					class="labeled-input__input labeled-input__input_lg"
+					v-model="name"
+					@input="validateName"
+					@focus="validateName"
+				/>
+			</ValidateableInput>
+			<span v-if="nameError" class="add-category-modal__error">{{
+				nameError
+			}}</span>
 			<button
-				class="button"
+				class="add-category-modal__btn"
 				@click="addCategory"
 				:disabled="nameError.length !== 0 || name.length === 0"
 			>
@@ -65,25 +68,47 @@ const onModalClose = () => {
 	</TheModal>
 </template>
 
-<style lang="scss" scoped>
-.form_wrapper {
+<style lang="scss">
+@use "sass:color";
+.add-category-modal {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	padding: 1rem;
-	.button {
-		font-size: 1rem;
-		height: 2rem;
-		width: fit-content;
-		padding: 0 0.25rem;
-		border: 2px solid $accent;
-		border-radius: 3px;
-		background-color: white;
-		transition: border-color, scale ease-in-out 0.3s;
+	&__error {
+		color: #d40000;
+		font-family: "Raleway";
+		font-size: 15px;
+		font-style: normal;
+		font-weight: 600;
+		line-height: normal;
+		letter-spacing: 0.3px;
+	}
+	&__btn {
+		width: 450px;
+		height: 48px;
+		border-radius: 8px;
+		background-color: #591c21;
+		outline: none;
+		border: none;
+		text-align: center;
+		font-family: "Raleway";
+		font-size: 20px;
+		font-style: normal;
+		font-weight: 600;
+		line-height: normal;
+		color: #fbfbfb;
+		transition: all ease 0.2s;
 		&:hover {
-			scale: 105%;
-			border-color: $primary;
-			transition: border-color, scale ease-in-out 0.3s;
+			background-color: color.adjust($color: #591c21, $lightness: 5%);
+		}
+		&:focus {
+			outline: 1px solid #591c21;
+			outline-offset: 1px;
+		}
+		&:disabled {
+			background-color: #7B6063;
+			color: #FBFBFB80;
 		}
 	}
 }
