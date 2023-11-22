@@ -60,8 +60,9 @@ onMounted(() => {
 		:header="`Изменение категории ${categoryToUpdate.name}`"
 	>
 		<div class="edit-category-modal">
-			<ValidateableInput label="Новое название категории" lg>
+			<ValidateableInput label="Новое название категории" lg v-slot="s">
 				<input
+					:id="s.id"
 					type="text"
 					v-model="newName"
 					placeholder="Раки"
