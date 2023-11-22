@@ -68,7 +68,7 @@ const isRegisterButtonDisabled = computed(() => {
 	);
 });
 
-const register = async (e: MouseEvent) => {
+async function register(e: MouseEvent) {
 	const data = await $fetch<IRegisterUserResponse>(
 		useRuntimeConfig().public.apiUrl.concat("/api/user/register"),
 		{
@@ -219,12 +219,13 @@ const register = async (e: MouseEvent) => {
 <style lang="scss">
 @use "sass:color";
 .register-form {
-	width: 434px;
-	min-height: 434px;
+	display: inline-flex;
+	padding: 20px 30px;
+	flex-direction: column;
+	align-items: center;
+	gap: 16px;
 	border-radius: 20px;
 	background-color: #ebe3e1;
-	padding: 23px 32px 32px 28px;
-	margin-top: 1;
 	&__header {
 		color: #591c21;
 		text-align: center;
@@ -233,19 +234,22 @@ const register = async (e: MouseEvent) => {
 		font-style: normal;
 		font-weight: 700;
 		line-height: normal;
-		padding-left: 120px;
 	}
 	&__inputs {
-		padding-top: 29px;
-		padding-bottom: 7px;
+		display: flex;
+		min-height: 207px;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 9px;
 	}
 	&__error-list {
 		display: flex;
 		flex-direction: column;
 		min-height: 17px;
-		padding-bottom: 11px;
+		width: 100%;
 	}
 	&__error {
+		display: block;
 		color: #d40000;
 		font-family: "Raleway";
 		font-size: 13px;
@@ -279,8 +283,6 @@ const register = async (e: MouseEvent) => {
 		}
 	}
 	&__link {
-		margin-left: 160px;
-		padding-top: 16px;
 		font-weight: 600;
 		background-image: linear-gradient(
 			to right,
