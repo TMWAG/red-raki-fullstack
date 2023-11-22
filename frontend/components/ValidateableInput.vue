@@ -1,6 +1,7 @@
 <script setup lang="ts">
 defineProps<{
 	label: string;
+	lg?: boolean;
 }>();
 const val = ref<string>("");
 const id = `input-${String(Math.floor(Math.random() * 1000))}`;
@@ -8,7 +9,11 @@ const id = `input-${String(Math.floor(Math.random() * 1000))}`;
 
 <template>
 	<div class="labeled-input">
-		<label :for="id" class="labeled-input__label">
+		<label
+			:for="id"
+			class="labeled-input__label"
+			:class="lg ? 'labeled-input__label_lg' : ''"
+		>
 			{{ label }}
 		</label>
 		<slot :id="id">
@@ -41,6 +46,11 @@ const id = `input-${String(Math.floor(Math.random() * 1000))}`;
 		line-height: normal;
 		letter-spacing: 0.28px;
 		padding-bottom: 8px;
+		&_lg {
+			font-size: 15px;
+			font-weight: 700;
+			letter-spacing: 0.3px;
+		}
 	}
 	&__input {
 		width: 374px;
@@ -48,21 +58,29 @@ const id = `input-${String(Math.floor(Math.random() * 1000))}`;
 		border-radius: 8px;
 		border: 1px solid #c0979b;
 		background-color: #fbfbfb;
-    color: #121212;
-    padding: 8px 13px;
+		color: #121212;
+		padding: 8px 13px;
 		transition: border-color ease 0.2s;
-		font-family: 'Sans Serif';
+		font-size: 18px;
+		font-family: "Open Sans";
+		font-style: normal;
+		line-height: normal;
+		font-weight: 600;
 		&:focus {
-      border-color: #591c21;
-      outline: none;
+			border-color: #591c21;
+			outline: 1px solid;
 		}
 		&::placeholder {
 			color: rgba(148, 148, 148, 0.5);
-			font-family: Open Sans;
+			font-family: "Open Sans";
 			font-size: 16px;
 			font-style: normal;
 			font-weight: 400;
 			line-height: normal;
+		}
+		&_lg {
+			width: 450px;
+			height: 44px;
 		}
 	}
 	&__switch {
