@@ -3,14 +3,14 @@ import { IDeleteCategoryResponse } from "~/@types";
 
 const props = defineProps<{
 	categoryToDelete: {
-    id: string;
-    name: string;
-  };
+		id: string;
+		name: string;
+	};
 }>();
 
 const emit = defineEmits<{
 	(e: "deleted"): void;
-  (e: "canceled"): void;
+	(e: "canceled"): void;
 }>();
 
 const { $backendUrl } = useNuxtApp();
@@ -18,18 +18,15 @@ const notificationStore = useNotificationStore();
 
 const deleteConfirmation = ref<string>("");
 const confirmationError = ref<string>("");
-
-const onConfirmationChange = (e: Event) => {
-	const { value } = e.target as HTMLInputElement;
-	if (value !== props.categoryToDelete.name) {
+function validateConfirmation() {
+	if (deleteConfirmation.value !== props.categoryToDelete.name) {
 		confirmationError.value = "Название не совпадает";
 	} else {
 		confirmationError.value = "";
 	}
-	deleteConfirmation.value = value;
-};
+}
 
-const deleteCategory = async () => {
+async function deleteCategory() {
 	await $fetch<IDeleteCategoryResponse>(
 		`${$backendUrl()}/api/category/${props.categoryToDelete.id}`,
 		{
@@ -43,63 +40,84 @@ const deleteCategory = async () => {
 		"Успешное удаление категории",
 		`Категория ${props.categoryToDelete.name} успешно удалена`
 	);
-  deleteConfirmation.value = "";
+	deleteConfirmation.value = "";
 	emit("deleted");
-};
+}
 
-const onModalClose = () => {
-  deleteConfirmation.value = "";
-  confirmationError.value = "";
-  emit("canceled");
+function onModalClose() {
+	deleteConfirmation.value = "";
+	confirmationError.value = "";
+	emit("canceled");
 }
 </script>
 
 <template>
-  <TheModal
-    @close="onModalClose"
-    header="Удаление категории"
-  >
-    <div class="form_wrapper">
-      <ValidateableInput
-        label="Название удаляемой категории"
-        type="text"
-        @input="onConfirmationChange"
-        :placeholder="props.categoryToDelete.name"
-        :error="confirmationError"
-        :value="deleteConfirmation"
-      />
-      <button
-        class="button"
-        @click="deleteCategory"
-        :disabled="deleteConfirmation !== props.categoryToDelete.name"
-      >
-        Удалить категорию
-      </button>
-    </div>
-  </TheModal>
+	<TheModal @close="onModalClose" :header="`Удаление категории ${categoryToDelete.name}`">
+		<div class="delete-category-modal">
+			<ValidateableInput label="Название удаляемой категории" lg>
+				<input
+					type="text"
+					:placeholder="props.categoryToDelete.name"
+					class="labeled-input__input labeled-input__input_lg"
+					v-model="deleteConfirmation"
+					@input="validateConfirmation"
+					@focus="validateConfirmation"
+				/>
+			</ValidateableInput>
+			<span class="delete-category-modal__error">{{ confirmationError }}</span>
+			<button
+				class="delete-category-modal__btn"
+				@click="deleteCategory"
+				:disabled="deleteConfirmation !== props.categoryToDelete.name"
+			>
+				Удалить категорию
+			</button>
+		</div>
+	</TheModal>
 </template>
 
-<style lang="scss" scoped>
-@use "assets/colors";
-.form_wrapper {
+<style lang="scss">
+@use "sass:color";
+.delete-category-modal {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-  gap: .5rem 0;
+	gap: 0.5rem 0;
 	padding: 1rem;
-	.button {
-		font-size: 1rem;
-		height: 2rem;
-		width: fit-content;
-		padding: 0 0.25rem;
-		border: 2px solid colors.$accent;
-		border-radius: 3px;
-		background-color: white;
-		transition: border-color, scale ease-in-out 0.3s;
+	&__error {
+		color: #d40000;
+		font-family: "Raleway";
+		font-size: 15px;
+		font-style: normal;
+		font-weight: 600;
+		line-height: normal;
+		letter-spacing: 0.3px;
+	}
+	&__btn {
+		width: 450px;
+		height: 48px;
+		border-radius: 8px;
+		background-color: #591c21;
+		outline: none;
+		border: none;
+		text-align: center;
+		font-family: "Raleway";
+		font-size: 20px;
+		font-style: normal;
+		font-weight: 600;
+		line-height: normal;
+		color: #fbfbfb;
+		transition: all ease 0.2s;
 		&:hover {
-			scale: 105%;
-			border-color: colors.$primary;
-			transition: border-color, scale ease-in-out 0.3s;
+			background-color: color.adjust($color: #591c21, $lightness: 5%);
+		}
+		&:focus {
+			outline: 1px solid #591c21;
+			outline-offset: 1px;
+		}
+		&:disabled {
+			background-color: #7B6063;
+			color: #FBFBFB80;
 		}
 	}
 }
