@@ -44,8 +44,9 @@ function onModalClose() {
 <template>
 	<TheModal header="Добавление категории" @close="onModalClose">
 		<div class="add-category-modal">
-			<ValidateableInput label="Название новой категории" lg>
+			<ValidateableInput label="Название новой категории" lg v-slot="s">
 				<input
+					:id="s.id"
 					placeholder="Раки"
 					type="text"
 					class="labeled-input__input labeled-input__input_lg"
