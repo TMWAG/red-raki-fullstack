@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { IProduct, IProductResponse } from "~/@types";
 
+const cartStore = useCartStore();
+
 const route = useRoute();
 const { $backendUrl } = useNuxtApp();
 const categoryId = computed(() => {
@@ -25,12 +27,12 @@ const onProductCreated = () => {
 	refresh({ dedupe: true });
 	hideAddModal();
 };
-const role = useCookie('role');
+const role = useCookie("role");
 const editButtonsVisibility = computed(() => {
 	return role.value === "ADMIN" || role.value === "SUPERVISOR";
 });
 
-const productToEdit = ref<IProduct>()
+const productToEdit = ref<IProduct>();
 const showEditModal = (p: IProduct) => {
 	productToEdit.value = p;
 };
@@ -42,7 +44,7 @@ const onProductEdited = () => {
 	hideEditModal();
 };
 
-const productToDelete = ref<IProduct>(); 
+const productToDelete = ref<IProduct>();
 const showDelModal = (p: IProduct) => {
 	productToDelete.value = p;
 };
@@ -52,22 +54,27 @@ const hideDelModal = () => {
 const onProductDeleted = () => {
 	refresh({ dedupe: true });
 	hideDelModal();
-}
+};
 </script>
 
 <template>
 	<div>
 		<NuxtLayout name="catalogue-layout">
-			<div class="catalogue_products">
-				<button v-if="editButtonsVisibility" @click="showAddModal" class="add_product_button">
+			<div class="catalogue">
+				<button
+					v-if="editButtonsVisibility"
+					@click="showAddModal"
+					class="catalogue__add-product-button"
+				>
 					Добавить товар
 				</button>
-				<ProductCard
-				v-for="p in data?.products"
-				:product="p"
-				:key="`product-${p.id}`"
-				@delete-product="showDelModal"
-				@edit-product="showEditModal"
+				<UITheProductCard
+					v-for="p in data?.products"
+					:product="p"
+					:key="`product-${p.id}`"
+					@delete="showDelModal(p)"
+					@edit="showEditModal(p)"
+					@add-to-cart="cartStore.addProduct(p)"
 				/>
 			</div>
 		</NuxtLayout>
@@ -91,21 +98,24 @@ const onProductDeleted = () => {
 	</div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @use "/assets/colors";
-.catalogue_products {
+.catalogue {
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
 	gap: 0.5rem;
-}
-.add_product_button {
-	border: 2px solid colors.$accent;
-	border-radius: 3px;
-	background-color: colors.$white;
-	font-size: 1.5rem;
-	transition: scale ease-in-out 0.2s;
-	&:hover {
-		scale: 105%;
+	&__add-product-button {
+		width: 321px;
+		height: 480px;
+		border-radius: 24px;
+		border: none;
+		background-color: #fbfbfb;
+		font-size: 1.5rem;
+		transition: scale ease-in-out 0.2s;
+		box-shadow: 2px 6px 16px 0px rgba(0, 0, 0, 0.2);
+		&:hover {
+			scale: 101%;
+		}
 	}
 }
 </style>
