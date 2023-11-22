@@ -54,8 +54,9 @@ function onModalClose() {
 <template>
 	<TheModal @close="onModalClose" :header="`Удаление категории ${categoryToDelete.name}`">
 		<div class="delete-category-modal">
-			<ValidateableInput label="Название удаляемой категории" lg>
+			<ValidateableInput label="Название удаляемой категории" lg v-slot="s">
 				<input
+					:id="s.id"
 					type="text"
 					:placeholder="props.categoryToDelete.name"
 					class="labeled-input__input labeled-input__input_lg"
