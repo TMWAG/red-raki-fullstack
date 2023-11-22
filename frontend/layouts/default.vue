@@ -82,6 +82,8 @@ const isPrivileged = computed(() => {
 
 <style lang="scss">
 .header {
+	position: fixed;
+	z-index: 2;
 	width: 100%;
 	display: flex;
 	height: 64px;
@@ -122,5 +124,6 @@ const isPrivileged = computed(() => {
 .main__wrapper {
 	width: 70%;
 	margin: 0 auto;
+	padding-top: 64px;
 }
 </style>
