@@ -2,33 +2,27 @@
 import { ICategory } from "~/@types";
 
 const props = defineProps<{
-	categoryToUpdate: {
-		id: string;
-		name: string;
-	};
+	categoryToUpdate: ICategory;
 }>();
 const emit = defineEmits<{
 	(e: "edited"): void;
 	(e: "canceled"): void;
 }>();
 
-const newName = ref<string>("");
-const newNameError = ref<string>("");
-
 const { $backendUrl } = useNuxtApp();
 const notificationStore = useNotificationStore();
 
-const onNewNameChange = (e: Event) => {
-	const { value } = e.target as HTMLInputElement;
-	if (value.length === 0) {
+const newName = ref<string>("");
+const newNameError = ref<string>("");
+function validateNewName() {
+	if (newName.value.length === 0) {
 		newNameError.value = "Новое название должно быть указано";
 	} else {
 		newNameError.value = "";
 	}
-	newName.value = value;
-};
+}
 
-const updateCategory = async () => {
+async function updateCategory() {
 	await $fetch<ICategory>(
 		`${$backendUrl()}/api/category/${props.categoryToUpdate.id}`,
 		{
@@ -47,16 +41,16 @@ const updateCategory = async () => {
 	);
 	newNameError.value = "";
 	emit("edited");
-};
+}
 
-const onModalClose = () => {
+function onModalClose() {
 	newName.value = "";
 	newNameError.value = "";
 	emit("canceled");
-};
+}
 
 onMounted(() => {
-  newName.value = props.categoryToUpdate.name;
+	newName.value = props.categoryToUpdate.name;
 });
 </script>
 
@@ -65,47 +59,74 @@ onMounted(() => {
 		@close="onModalClose"
 		:header="`Изменение категории ${categoryToUpdate.name}`"
 	>
-		<div class="form_wrapper">
-			<ValidateableInput
-				label="Новое название категории"
-				type="text"
-				@input="onNewNameChange"
-				placeholder="Раки"
-				:error="newNameError"
-				:value="newName"
-			/>
+		<div class="edit-category-modal">
+			<ValidateableInput label="Новое название категории" lg>
+				<input
+					type="text"
+					v-model="newName"
+					placeholder="Раки"
+					@input="validateNewName"
+					@focus="validateNewName"
+					class="labeled-input__input labeled-input__input_lg"
+				/>
+			</ValidateableInput>
+			<span v-if="newNameError" class="edit-category-modal__error">{{
+				newNameError
+			}}</span>
 			<button
-				class="button"
+				class="edit-category-modal__btn"
 				@click="updateCategory"
 				:disabled="newNameError.length !== 0"
 			>
-				Изменить категорию
+				Сохранить изменения
 			</button>
 		</div>
 	</TheModal>
 </template>
 
-<style lang="scss" scoped>
-.form_wrapper {
+<style lang="scss">
+@use "sass:color";
+.edit-category-modal {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	gap: 0.5rem 0;
 	padding: 1rem;
-	.button {
-		font-size: 1rem;
-		height: 2rem;
-		width: fit-content;
-		padding: 0 0.25rem;
-		border: 2px solid $accent;
-		border-radius: 3px;
-		background-color: white;
-		transition: border-color, scale ease-in-out 0.3s;
+	&__btn {
+		width: 450px;
+		height: 48px;
+		border-radius: 8px;
+		background-color: #591c21;
+		outline: none;
+		border: none;
+		text-align: center;
+		font-family: "Raleway";
+		font-size: 20px;
+		font-style: normal;
+		font-weight: 600;
+		line-height: normal;
+		color: #fbfbfb;
+		transition: all ease 0.2s;
 		&:hover {
-			scale: 105%;
-			border-color: $primary;
-			transition: border-color, scale ease-in-out 0.3s;
+			background-color: color.adjust($color: #591c21, $lightness: 5%);
 		}
+		&:focus {
+			outline: 1px solid #591c21;
+			outline-offset: 1px;
+		}
+		&:disabled {
+			background-color: #7B6063;
+			color: #FBFBFB80;
+		}
+	}
+	&__error {
+		color: #d40000;
+		font-family: "Raleway";
+		font-size: 15px;
+		font-style: normal;
+		font-weight: 600;
+		line-height: normal;
+		letter-spacing: 0.3px;
 	}
 }
 </style>
