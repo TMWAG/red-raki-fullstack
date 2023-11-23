@@ -66,7 +66,7 @@ const onProductDeleted = () => {
 					@click="showAddModal"
 					class="catalogue__add-product-button"
 				>
-					Добавить товар
+					Добавить товар 
 				</button>
 				<UITheProductCard
 					v-for="p in data?.products"
@@ -79,6 +79,7 @@ const onProductDeleted = () => {
 			</div>
 		</NuxtLayout>
 		<AddProductForm
+			:category-id="(categoryId as string)"
 			v-if="addModalVisibility"
 			@canceled="hideAddModal"
 			@product-created="onProductCreated"
@@ -113,6 +114,7 @@ const onProductDeleted = () => {
 		font-size: 1.5rem;
 		transition: scale ease-in-out 0.2s;
 		box-shadow: 2px 6px 16px 0px rgba(0, 0, 0, 0.2);
+		cursor: pointer;
 		&:hover {
 			scale: 101%;
 		}
