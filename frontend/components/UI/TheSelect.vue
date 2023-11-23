@@ -53,9 +53,12 @@ function select(id: string) {
 		font-style: normal;
 		font-weight: 600;
 		line-height: normal;
+		position: relative;
 	}
 	&__items {
+		top: -200%;
 		display: block;
+		position: absolute;
 		animation: "show-select-options" 0.2s ease;
 		animation-iteration-count: 1;
 		background-color: #fbfbfb;
