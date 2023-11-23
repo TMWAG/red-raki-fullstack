@@ -33,10 +33,6 @@ const id = `input-${String(Math.floor(Math.random() * 1000))}`;
 	display: flex;
 	flex-direction: column;
 	position: relative;
-	margin-bottom: 11px;
-	&:last-child {
-		margin-bottom: 0;
-	}
 	&__label {
 		color: #591c21;
 		font-family: "Raleway";
@@ -66,6 +62,7 @@ const id = `input-${String(Math.floor(Math.random() * 1000))}`;
 		font-style: normal;
 		line-height: normal;
 		font-weight: 600;
+		resize: none;
 		&:focus {
 			border-color: #591c21;
 			outline: 1px solid;
