@@ -113,6 +113,9 @@ async function deleteProduct() {
 		}
 	}
 	&__error {
+		width: 100%;
+		padding-left: 3px;
+		padding-bottom: 19px;
 		color: #d40000;
 		font-family: "Raleway";
 		font-size: 15px;
