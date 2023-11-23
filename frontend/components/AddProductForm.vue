@@ -1,34 +1,34 @@
 <script setup lang="ts">
 import { ICategoryResponse, ICreateProductResponse } from "~/@types";
 
-const { $backendUrl } = useNuxtApp();
-
-const notificationStore = useNotificationStore();
-
-const categoriesResponse = await $fetch<ICategoryResponse>(
-	`${$backendUrl()}/api/category`
-).catch((e) =>
-	notificationStore.addErrorNotification("Ошибка получения категорий", e)
-);
-
-const categoriesList = categoriesResponse!.categories;
-
 const emit = defineEmits<{
 	(e: "canceled"): void;
 	(e: "product-created"): void;
 }>();
 
+const props = defineProps<{
+	categoryId?: string;
+}>();
+
+const { $backendUrl } = useNuxtApp();
+
+const notificationStore = useNotificationStore();
+
+const { data } = await useFetch<ICategoryResponse>(
+	`${$backendUrl()}/api/category`,
+	{ key: "categories" }
+);
+
 const name = ref<string>("");
 const nameError = ref<string>("");
-const onNameChange = (e: Event) => {
-	const { value } = e.target as HTMLInputElement;
-	if (value.length === 0) {
-		nameError.value = "Название необходимо указать";
+function validateName() {
+	if (name.value.length === 0) {
+		nameError.value = "Название товара необходимо указать";
 	} else {
 		nameError.value = "";
 	}
-	name.value = value;
-};
+}
+
 const description = ref<string>("");
 
 const price = ref<string>("");
@@ -36,12 +36,13 @@ const priceError = ref<string>("");
 const onPriceChange = (e: Event) => {
 	const { value } = e.target as HTMLInputElement;
 	if (!Number(value)) {
-		priceError.value = "Цена должна быть целым числом";
+		return;
 	} else {
-		priceError.value = "";
+		price.value = value;
 	}
-	price.value = value;
 };
+
+const notes = ref<string>("");
 
 const image = ref<File>();
 const imageError = ref<string>("");
@@ -77,10 +78,17 @@ const onImageChange = (e: Event) => {
 		return;
 	}
 };
-const category = ref<string>("");
-const onCategoryChange = (e: Event) => {
-	category.value = (e.target as HTMLSelectElement).value;
-};
+const category = ref<string>(
+	data.value?.categories.find((c) => c.id === props.categoryId)?.name ||
+		"- Выберите категорию -"
+);
+function onSelected(id: string) {
+	if (data.value && data.value.categories) {
+		category.value = data.value.categories.find((c) => c.id === id)!.name;
+		categoryId.value = id;
+	}
+}
+const categoryId = ref<string>(props.categoryId || "");
 
 const sendButtonDisabled = computed(() => {
 	return Boolean(
@@ -100,7 +108,7 @@ const onCreateProduct = async () => {
 	body.set("name", name.value);
 	body.set("description", description.value);
 	body.set("price", price.value);
-	body.set("categoryId", category.value);
+	body.set("categoryId", categoryId.value);
 	body.set("image", image.value);
 	const res = await $fetch<ICreateProductResponse>(
 		`${$backendUrl()}/api/product`,
@@ -117,57 +125,84 @@ const onCreateProduct = async () => {
 	if (res) {
 		notificationStore.addInfoNotification(
 			"Успешное добавление",
-			`Товар ${res.name} успешно создан`
+			`Товар ${name.value} успешно создан`
 		);
-		emit('product-created');
+		emit("product-created");
 	}
 };
 </script>
 
 <template>
 	<TheModal header="Добавление товара" @close="emit('canceled')">
-		<div class="form_wrapper">
-			<ValidateableInput
-				:value="name"
-				:error="nameError"
-				label="Название товара"
-				placeholder="Раки отборные"
-				type="text"
-				@input="onNameChange"
-			/>
-			<label class="input">
-				Описание товара
-				<textarea v-model="description" placeholder="Идеальная закуска">{{
-					description
-				}}</textarea>
-			</label>
-			<ValidateableInput
-				:value="price"
-				type="number"
-				label="Цена за единицу"
-				placeholder="1200"
-				:error="priceError"
-				@input="onPriceChange"
-			/>
-			<label class="input">
-				Изображение
-				<input type="file" @input="onImageChange" />
-				<span class="error">{{ imageError }}</span>
-			</label>
-			<label class="input">
-				Категория
-				<select v-model="category" @change="onCategoryChange">
-					<option
-						v-for="c in categoriesList"
-						:value="c.id"
-						:key="`select-${c.name}`"
+		<div class="add-product-form">
+			<div class="add-product-form__inputs">
+				<ValidateableInput label="Название товара" lg v-slot="s">
+					<input
+						:id="s.id"
+						type="text"
+						placeholder="Раки"
+						class="labeled-input__input labeled-input__input_lg"
+						v-model="name"
+						@input="validateName"
+						@focus="validateName"
+					/>
+				</ValidateableInput>
+				<ValidateableInput label="Описание товара" lg v-slot="s">
+					<textarea
+						:id="s.id"
+						v-model="description"
+						placeholder="Отличная закуска"
+						class="labeled-input__input labeled-input__input_lg"
+						>{{ description }}</textarea
 					>
-						{{ c.name }}
-					</option>
-				</select>
-			</label>
+				</ValidateableInput>
+				<ValidateableInput label="Цена за единицу" lg v-slot="s">
+					<input
+						:id="s.id"
+						type="text"
+						placeholder="1200,20"
+						class="labeled-input__input labeled-input__input_lg"
+						:value="price"
+						v-maska
+						data-maska="0.99"
+						data-maska-tokens="0:\d:multiple|9:\d:optional"
+						@input="onPriceChange"
+					/>
+				</ValidateableInput>
+				<ValidateableInput label="Примечания" lg v-slot="s">
+					<input
+						:id="s.id"
+						type="text"
+						class="labeled-input__input labeled-input__input_lg"
+						placeholder="Раки до 30 гр; В килограмме примерно 20 штук"
+						v-model="notes"
+					/>
+				</ValidateableInput>
+				<ValidateableInput label="Изображение" lg v-slot="s">
+					<input type="file" :id="s.id" @input="onImageChange" />
+				</ValidateableInput>
+				<ValidateableInput label="Категория" lg v-slot="s">
+					<UITheSelect
+						:list="data?.categories"
+						:selected="category"
+						@selected="onSelected"
+						:id="s.id"
+					/>
+				</ValidateableInput>
+			</div>
+			<div class="add-product-form__errors">
+				<span v-if="sendButtonDisabled" class="add-product-form__error">
+					Есть незаполненные поля</span
+				>
+				<span v-if="priceError" class="add-product-form__error">
+					{{ priceError }}</span
+				>
+				<span v-if="imageError" class="add-product-form__error">
+					{{ imageError }}</span
+				>
+			</div>
 			<button
-				class="button"
+				class="add-product-form__btn"
 				:disabled="sendButtonDisabled"
 				@click.prevent="onCreateProduct"
 			>
@@ -177,69 +212,60 @@ const onCreateProduct = async () => {
 	</TheModal>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @use "sass:color";
-.form_wrapper {
-	display: flex;
-	flex-direction: column;
+.add-product-form {
 	align-items: center;
-	padding: 1rem;
-}
-.input {
-	font-size: 1rem;
-	width: min-content;
+	align-items: flex-start;
 	display: flex;
+	display: inline-flex;
 	flex-direction: column;
-	align-items: baseline;
-	justify-content: flex-start;
-	min-height: 7rem;
-	& input,
-	textarea,
-	select {
-		resize: vertical;
-		font-size: 1.25rem;
-		min-height: 3rem;
-		height: fit-content;
-		width: 20rem;
-		padding: 0.25rem;
-		margin: 0.25rem;
-		border-radius: 3px;
-		border: 2px solid $accent;
-		transition: border-color, scale ease-in-out 0.3s;
-		&:focus {
-			border-color: $primary;
-			outline: none;
-			transition: border-color, scale ease-in-out 0.3s;
-			scale: 105%;
-		}
-		&::placeholder {
-			font-size: 1.25rem;
-			color: $accent;
-			opacity: 0.75;
-		}
-		&:invalid {
-			background-color: color.adjust($color: $warn, $alpha: -0.8);
-		}
+	gap: 14px;
+	padding: 19px 10px 19px 18px;
+	&__inputs {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 9px;
 	}
-	.error {
-		color: $warn;
-		text-align: center;
-		font-size: 0.9rem;
+	&__errors {
+		display: flex;
+		flex-direction: column;
+		width: 450px;
 	}
-}
-.button {
-	font-size: 1rem;
-	height: 2rem;
-	width: fit-content;
-	padding: 0 0.25rem;
-	border: 2px solid $accent;
-	border-radius: 3px;
-	background-color: white;
-	transition: border-color, scale ease-in-out 0.3s;
-	&:hover {
-		scale: 105%;
-		border-color: $primary;
-		transition: border-color, scale ease-in-out 0.3s;
+	&__error {
+		display: block;
+		color: #d40000;
+		font-family: "Raleway";
+		font-size: 13px;
+		font-style: normal;
+		font-weight: 500;
+		line-height: normal;
+		letter-spacing: 0.26px;
+	}
+	&__btn {
+		width: 450px;
+		height: 48px;
+		border-radius: 8px;
+		background-color: #591c21;
+		color: #fbfbfb;
+		border: none;
+		outline: none;
+		transition: all ease 0.2s;
+		&:disabled {
+			background-color: #7b6063;
+			color: #fbfbfb80;
+			cursor: not-allowed;
+		}
+		&:not(:disabled) {
+			&:hover {
+				background-color: color.adjust($color: #591c21, $lightness: 5%);
+			}
+			&:focus {
+				outline: solid 1px #591c21;
+				outline-offset: 1px;
+			}
+		}
 	}
 }
 </style>
