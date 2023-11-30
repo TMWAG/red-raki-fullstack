@@ -41,9 +41,7 @@ const isPrivileged = computed(() => {
 				</svg>
 				<ul class="header__links">
 					<li>
-						<UITheLink to="/">
-							главная	
-						</UITheLink>
+						<UITheLink to="/"> главная </UITheLink>
 					</li>
 					<li>
 						<UITheLink to="/catalogue"> Ассортимент </UITheLink>
@@ -59,16 +57,14 @@ const isPrivileged = computed(() => {
 						<UITheLink to="/cart"> Корзина </UITheLink>
 					</li>
 					<li>
-						<UITheLink v-if="token" to="/orders">Профиль</UITheLink>
+						<UITheLink v-if="token" to="/me">Профиль</UITheLink>
 						<UITheLink v-else to="/login">Войти</UITheLink>
 					</li>
-					<li
-						v-if="isPrivileged"
-					>
-						<UITheLink
-							to="/admin"
-							>Администрирование</UITheLink
-						>
+					<li v-if="isPrivileged">
+						<UITheLink to="/orders">Заказы</UITheLink>
+					</li>
+					<li v-if="role === 'ADMIN'">
+						<UITheLink to="/users">Пользователи</UITheLink>
 					</li>
 				</ul>
 			</div>
@@ -84,7 +80,7 @@ const isPrivileged = computed(() => {
 .header {
 	position: fixed;
 	z-index: 2;
-	width: 100%;
+	width: 100vw;
 	display: flex;
 	height: 64px;
 	justify-content: center;
@@ -103,22 +99,24 @@ const isPrivileged = computed(() => {
 	}
 	&__main {
 		display: flex;
-		justify-content: space-around;
+		justify-content: flex-start;
 	}
 	&__links {
 		list-style: none;
 		font-size: 1.25rem;
+		gap: 20px;
 		display: flex;
 		flex-grow: 1;
-		justify-content: space-between;
+		justify-content: flex-start;
 		align-items: center;
 		min-width: 400px;
 	}
 	&__user {
-		width: 450px;
+		width: 500px;
 		list-style: none;
 		display: flex;
-		justify-content: space-evenly;
+		justify-content: flex-end;
+		gap: 20px;
 	}
 }
 .main__wrapper {
