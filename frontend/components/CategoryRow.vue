@@ -66,9 +66,9 @@ const editButtonsVisibility = computed(() => {
 				:edit-buttons-visibility="editButtonsVisibility"
 			/>
 			<div v-if="editButtonsVisibility" class="chip">
-				<UITheLink class="chip__link" @click="showAddModal">
+				<span class="chip__link" @click="showAddModal">
 					Добавить категорию
-				</UITheLink>
+				</span>
 			</div>
 			<AddCategoryModal
 				v-if="addModalVisibility"
@@ -99,7 +99,7 @@ const editButtonsVisibility = computed(() => {
 	gap: 16px;
 	padding: 16px 0 21px 0;
 	&__header {
-		color: $secondary;
+		color: #911D28;
 		font-size: 20px;
 	}
 	&__categories {
