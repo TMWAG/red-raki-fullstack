@@ -56,7 +56,7 @@ function select(id: string) {
 		position: relative;
 	}
 	&__items {
-		top: -200%;
+		top: -50%;
 		display: block;
 		position: absolute;
 		animation: "show-select-options" 0.2s ease;
