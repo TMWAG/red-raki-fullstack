@@ -120,7 +120,6 @@ const editButtonsVisibility = computed(() => {
 .product-card {
 	position: relative;
 	padding: 19px 19px 16px 19px;
-	width: 321px;
 	height: 480px;
 	border-radius: 24px;
 	box-shadow: 2px 6px 16px 0px rgba(0, 0, 0, 0.2);
@@ -137,7 +136,7 @@ const editButtonsVisibility = computed(() => {
 	&__img {
 		display: block;
 		height: 317px;
-		width: 284px;
+		width: 100%;
 		object-fit: cover;
 		border-radius: 8px;
 	}
