@@ -195,21 +195,21 @@ const onSend = async () => {
 		padding: 0.25rem;
 		margin: 0.25rem;
 		border-radius: 3px;
-		border: 2px solid $accent;
+		border: 2px solid black;
 		transition: border-color, scale ease-in-out 0.3s;
 		&:focus {
-			border-color: $primary;
+			border-color: yellow;
 			outline: none;
 			transition: border-color, scale ease-in-out 0.3s;
 			scale: 105%;
 		}
 		&::placeholder {
 			font-size: 1.25rem;
-			color: $accent;
+			color: gray;
 			opacity: 0.75;
 		}
 		&:invalid {
-			background-color: color.adjust($color: $warn, $alpha: -0.8);
+			background-color: color.adjust($color: black, $alpha: -0.8);
 		}
 	}
 }
@@ -218,13 +218,13 @@ const onSend = async () => {
 	height: 2rem;
 	width: fit-content;
 	padding: 0 0.25rem;
-	border: 2px solid $accent;
+	border: 2px solid yellow;
 	border-radius: 3px;
 	background-color: white;
 	transition: border-color, scale ease-in-out 0.3s;
 	&:hover {
 		scale: 105%;
-		border-color: $primary;
+		border-color: orangered;
 		transition: border-color, scale ease-in-out 0.3s;
 	}
 }
