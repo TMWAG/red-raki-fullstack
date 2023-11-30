@@ -3,9 +3,10 @@ import { ICategoryResponse, IProduct } from "~/@types";
 
 const { $backendUrl } = useNuxtApp();
 const notificationStore = useNotificationStore();
-const { data } = useFetch<ICategoryResponse>(
-	`${$backendUrl()}/api/category`
-);
+const { data } = useFetch<ICategoryResponse>(`${$backendUrl()}/api/category`, {
+	method: "GET",
+	key: "category",
+});
 
 const props = defineProps<{
 	product: IProduct;
@@ -16,38 +17,45 @@ const emit = defineEmits<{
 }>();
 const newName = ref<string>(props.product.name);
 const nameError = ref<string>("");
-const onNameChange = (e: Event) => {
-	const { value } = e.target as HTMLInputElement;
-	if (value.length === 0) {
+function validateName() {
+	if (newName.value.length === 0) {
 		nameError.value = "Название должно быть указано";
 	} else {
 		nameError.value = "";
 	}
-	newName.value = value;
-};
+}
 
 const newDescription = ref<string>(props.product.description);
 
 const newPrice = ref<string>(String(props.product.price));
 const priceError = ref<string>("");
-const onPriceChange = (e: Event) => {
-	const { value } = e.target as HTMLInputElement;
-	if (!Number(value)) {
-		priceError.value = "Цена должна быть числом";
+function validatePrice() {
+	if (newPrice.value.length === 0) {
+		priceError.value = "Цена должна быть указана";
 	} else {
 		priceError.value = "";
 	}
-	newPrice.value = value;
-};
+}
 
-const newCategory = ref<string>(props.product.categoryId);
-const onCategoryChange = (e: Event) => {
-	newCategory.value = (e.target as HTMLSelectElement).value;
-};
+const newNotes = ref<string>(props.product.notes);
+
+const newCategoryId = ref<string>(props.product.categoryId);
+const newCategoryName = ref<string>(
+	data.value?.categories.find((c) => c.id === props.product.categoryId)?.name ||
+		"- Выберете категорию -"
+);
+function onSelected(id: string) {
+	if (data.value && data.value.categories) {
+		newCategoryName.value = data.value.categories.find(
+			(c) => c.id === id
+		)!.name;
+		newCategoryId.value = id;
+	}
+}
 
 const newImage = ref<File>();
 const imageError = ref<string>();
-const onImageChange = (e: Event) => {
+function onImageChange(e: Event) {
 	const { files } = e.target as HTMLInputElement;
 	if (!files || !files[0]) {
 		imageError.value = "Изображение необходимо выбрать";
@@ -78,7 +86,7 @@ const onImageChange = (e: Event) => {
 		imageError.value = "Формат изображения не поддерживается";
 		return;
 	}
-};
+}
 
 const sendButtonDisabled = computed(() => {
 	return Boolean(nameError.value || priceError.value || imageError.value);
@@ -88,7 +96,8 @@ const onSend = async () => {
 	const body = new FormData();
 	body.set("name", newName.value);
 	body.set("description", newDescription.value);
-	body.set("categoryId", newCategory.value);
+	body.set("notes", newNotes.value);
+	body.set("categoryId", newCategoryId.value);
 	body.set("price", newPrice.value);
 	if (newImage.value) {
 		body.set("image", newImage.value);
@@ -120,112 +129,141 @@ const onSend = async () => {
 		:header="`Изменение товара ${product.name}`"
 		@close="emit('closed')"
 	>
-		<div class="form_wrapper">
-      <ValidateableInput
-        label="Название"
-        :value="newName"
-        :error="nameError"
-        @input="onNameChange"
-        type="text"
-      />
-      <label class="input">
-        Описание товара
-        <textarea v-model="newDescription" placeholder="Идеальная закуска">{{
-          newDescription
-        }}</textarea>
-      </label>
-      <ValidateableInput
-        :value="newPrice"
-        type="number"
-        label="Цена за единицу"
-        placeholder="1200"
-        :error="priceError"
-        @input="onPriceChange"
-      />
-      <label class="input">
-        Изображение
-        <input type="file" @input="onImageChange" />
-        <span class="error">{{ imageError }}</span>
-      </label>
-      <label class="input">
-        Категория
-        <select v-model="newCategory" @change="onCategoryChange">
-          <option
-            v-for="c in data?.categories"
-            :value="c.id"
-            :key="`select-${c.name}`"
-          >
-            {{ c.name }}
-          </option>
-        </select>
-      </label>
-      <button
-        class="button"
-        :disabled="sendButtonDisabled"
-        @click.prevent="onSend"
-      >Изменить товар</button>
-    </div>
+		<div class="edit-product-form">
+			<div class="edit-product-form__inputs">
+				<ValidateableInput label="Название" v-slot="s" lg>
+					<input
+						:id="s.id"
+						:placeholder="product.name"
+						class="labeled-input__input labeled-input__input_lg"
+						type="text"
+						v-model="newName"
+						@input="validateName"
+						@focus="validateName"
+					/>
+				</ValidateableInput>
+				<ValidateableInput label="Описание товара" v-slot="s" lg>
+					<textarea
+						:id="s.id"
+						v-model="newDescription"
+						class="labeled-input__input labeled-input__input_lg"
+						>{{ newDescription }}</textarea
+					>
+				</ValidateableInput>
+				<ValidateableInput
+					:value="newPrice"
+					label="Цена за единицу"
+					v-slot="s"
+					lg
+				>
+					<input
+						:id="s.id"
+						type="text"
+						placeholder="1200.20"
+						class="labeled-input__input labeled-input__input_lg"
+						v-model="newPrice"
+						v-maska
+						data-maska="0.99"
+						data-maska-tokens="0:\d:multiple|9:\d:optional"
+						@input="validatePrice"
+						@focus="validatePrice"
+					/>
+				</ValidateableInput>
+				<ValidateableInput label="Примечания" v-slot="s" lg>
+					<input
+						:id="s.id"
+						type="text"
+						class="labeled-input__input labeled-input__input_lg"
+						placeholder="Раки до 30 гр; В килограмме примерно 20 штук"
+						v-model="newNotes"
+					/>
+				</ValidateableInput>
+				<ValidateableInput label="Изображение" v-slot="s" lg>
+					<input :id="s.id" type="file" @input="onImageChange" />
+				</ValidateableInput>
+				<ValidateableInput label="Категория" v-slot="s" lg>
+					<UITheSelect
+						:list="data?.categories"
+						:selected="newCategoryName"
+						@selected="onSelected"
+						:id="s.id"
+					/>
+				</ValidateableInput>
+			</div>
+			<div class="edit-product-form__errors">
+				<span v-if="nameError" class="edit-product-form__error">
+					{{ nameError }}
+				</span>
+				<span v-if="priceError" class="edit-product-form__error">
+					{{ priceError }}
+				</span>
+				<span v-if="imageError" class="edit-product-form__error">
+					{{ imageError }}
+				</span>
+			</div>
+			<button
+				class="edit-product-form__btn"
+				:disabled="sendButtonDisabled"
+				@click.prevent="onSend"
+			>
+				Изменить товар
+			</button>
+		</div>
 	</TheModal>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @use "sass:color";
-.form_wrapper {
+.edit-product-form {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	gap: 14px;
 	padding: 1rem;
-}
-.input {
-	font-size: 1rem;
-	width: min-content;
-	display: flex;
-	flex-direction: column;
-	align-items: baseline;
-	justify-content: flex-start;
-	min-height: 7rem;
-	& input,
-	textarea,
-	select {
-		resize: vertical;
-		font-size: 1.25rem;
-		min-height: 3rem;
-		height: fit-content;
-		width: 20rem;
-		padding: 0.25rem;
-		margin: 0.25rem;
-		border-radius: 3px;
-		border: 2px solid black;
-		transition: border-color, scale ease-in-out 0.3s;
-		&:focus {
-			border-color: yellow;
-			outline: none;
-			transition: border-color, scale ease-in-out 0.3s;
-			scale: 105%;
-		}
-		&::placeholder {
-			font-size: 1.25rem;
-			color: gray;
-			opacity: 0.75;
-		}
-		&:invalid {
-			background-color: color.adjust($color: black, $alpha: -0.8);
-		}
+	&__inputs {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 6px;
 	}
-}
-.button {
-	font-size: 1rem;
-	height: 2rem;
-	width: fit-content;
-	padding: 0 0.25rem;
-	border: 2px solid yellow;
-	border-radius: 3px;
-	background-color: white;
-	transition: border-color, scale ease-in-out 0.3s;
-	&:hover {
-		scale: 105%;
-		border-color: orangered;
-		transition: border-color, scale ease-in-out 0.3s;
+	&__errors {
+		display: flex;
+		flex-direction: column;
+		width: 450px;
+	}
+	&__error {
+		display: block;
+		color: #d40000;
+		font-family: "Raleway";
+		font-size: 13px;
+		font-style: normal;
+		font-weight: 500;
+		line-height: normal;
+		letter-spacing: 0.26px;
+	}
+	&__btn {
+		width: 450px;
+		height: 48px;
+		border-radius: 8px;
+		background-color: #591c21;
+		color: #fbfbfb;
+		border: none;
+		outline: none;
+		transition: all ease 0.2s;
+		&:disabled {
+			background-color: #7b6063;
+			color: #fbfbfb80;
+			cursor: not-allowed;
+		}
+		&:not(:disabled) {
+			&:hover {
+				background-color: color.adjust($color: #591c21, $lightness: 5%);
+			}
+			&:focus {
+				outline: solid 1px #591c21;
+				outline-offset: 1px;
+			}
+		}
 	}
 }
 </style>
