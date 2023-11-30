@@ -76,10 +76,9 @@ useHead({
 </template>
 
 <style lang="scss" scoped>
-@use "/assets/colors";
 .main_wrapper {
-	background-color: colors.$white;
-	border: 1px solid colors.$accent;
+	background-color: whitesmoke;
+	border: 1px solid aqua;
 	border-radius: 5px;
 	padding: 1rem;
   h1 {
