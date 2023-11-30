@@ -53,3 +53,13 @@ export interface IOrderedProduct {
 	product: IProduct;
 }
 
+export interface IOrderResponse {
+	id: string;
+	phone: string;
+	address: string;
+	total: number;
+	status: "ACCEPTED" | "IN_DELIVERY" | "DELIVERED";
+	createdAt: string;
+	updatedAt: string;
+}[]
+
