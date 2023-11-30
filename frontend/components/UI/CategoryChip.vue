@@ -14,7 +14,7 @@ const emit = defineEmits<{
 <template>
 	<div
 		class="chip"
-		:class="$route.query.categoryId === category.id ? 'chip_active' : ''"
+		:class="$route.params.categoryId === category.id ? 'chip_active' : ''"
 	>
 		<button
 			v-if="editButtonsVisibility"
@@ -44,9 +44,9 @@ const emit = defineEmits<{
 				/>
 			</svg>
 		</button>
-		<UITheLink :to="`/catalogue?categoryId=${category.id}`" class="chip__link">
+		<NuxtLink :to="`/catalogue?categoryId=${category.id}`" class="chip__link">
 			{{ category.name }}
-		</UITheLink>
+		</NuxtLink>
 		<button
 			v-if="editButtonsVisibility"
 			class="chip__controls"
@@ -96,9 +96,9 @@ const emit = defineEmits<{
 .chip {
 	background-image: linear-gradient(
 		to right,
-		$secondary,
-		$secondary 50%,
-		$primary 50%
+		#591C21,
+		#591C21 50%,
+		#911D28 50%,
 	);
 	display: flex;
 	align-content: center;
@@ -117,13 +117,20 @@ const emit = defineEmits<{
 		background-position: 0;
 	}
 	&__link {
-		-webkit-text-fill-color: #FBFBFB;
+		-webkit-text-fill-color: #fbfbfb;
 		border: none;
 		outline: none;
 		padding: 10px 20px;
 		display: block;
 		width: 100%;
 		height: 100%;
+		text-decoration: none;
+		font-family: "Raleway";
+		font-size: 18px;
+		font-style: normal;
+		font-weight: 700;
+		line-height: normal;
+		text-transform: uppercase;
 		text-transform: capitalize;
 		&::before {
 			display: none;
@@ -133,9 +140,9 @@ const emit = defineEmits<{
 		outline: none;
 		border: none;
 		background-color: transparent;
-	}	
+	}
 }
 .chip_active {
-	background-color: $secondary;
+	background-color: #591C21;
 }
 </style>
