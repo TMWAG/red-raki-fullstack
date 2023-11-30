@@ -21,10 +21,12 @@ services:
     volumes:
       - ./backend:/app:rw
     expose:
-      - 5555
       - 3001
+    ports:
+      - "5555:5555"
     depends_on:
       - postgres
+    restart: always
 
   frontend:
     container_name: frontend
@@ -37,6 +39,7 @@ services:
       - 3000
     depends_on:
       - backend
+    restart: always
   
   nginx:
     container_name: proxy_nginx
