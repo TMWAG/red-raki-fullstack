@@ -147,6 +147,7 @@ export async function updateProductHandler(
 			data: {
 				categoryId,
 				description: req.body.description?.value,
+				notes: req.body.notes?.value,
 				name: req.body.name?.value,
 				price: Number(req.body.price?.value),
 				image,
