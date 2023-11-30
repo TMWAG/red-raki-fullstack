@@ -119,6 +119,9 @@ const editButtonsVisibility = computed(() => {
 @use 'sass:color';
 .product-card {
 	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 	padding: 19px 19px 16px 19px;
 	height: 480px;
 	border-radius: 24px;
