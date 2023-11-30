@@ -4,8 +4,9 @@ import { useLocalStorage } from "@vueuse/core";
 const STORE_NAME = "cart";
 
 export const useCartStore = defineStore(STORE_NAME, () => {
-	const productList = useLocalStorage(STORE_NAME, [] as IOrderedProduct[]);
-	const addProduct = (product: IProduct) => {
+	const productList = ref(useLocalStorage(STORE_NAME, [] as IOrderedProduct[]));
+
+	function addProduct(product: IProduct) {
 		const idx = productList.value.findIndex((op) => op.product.id === product.id);
 		if (idx !== -1) {
 			productList.value[idx].amount++
@@ -16,7 +17,7 @@ export const useCartStore = defineStore(STORE_NAME, () => {
 			});
 		}	
 	};
-	const removeProduct = (id: string) => {
+	function removeProduct(id: string) {
 		const idx = productList.value.findIndex((op) => op.product.id === id);
 		if (productList.value[idx].amount > 1) {
 			productList.value[idx].amount--;
@@ -24,16 +25,16 @@ export const useCartStore = defineStore(STORE_NAME, () => {
 			productList.value.splice(idx, 1);
 		};
 	};
-	const deleteProduct = (id: string) => {
+	function deleteProduct(id: string) {
 		const idx = productList.value.findIndex((op) => op.product.id === id);
 		if (idx !== -1) {
 			productList.value.splice(idx, 1);
 		}
 	};
-	const isInCart = (id: string) => {
+	function isInCart(id: string) {
 		return productList.value.find((op) => op.product.id === id)?.amount; 
 	};
-	
+
 	return {
 		productList,
 		addProduct,
