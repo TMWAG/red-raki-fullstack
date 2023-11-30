@@ -29,6 +29,7 @@ const id = `input-${String(Math.floor(Math.random() * 1000))}`;
 </template>
 
 <style lang="scss">
+@use "sass:color";
 .labeled-input {
 	display: flex;
 	flex-direction: column;
@@ -74,6 +75,10 @@ const id = `input-${String(Math.floor(Math.random() * 1000))}`;
 			font-style: normal;
 			font-weight: 400;
 			line-height: normal;
+		}
+		&:disabled {
+			color: color.adjust($color: #121212, $lightness: 35%);
+			cursor: not-allowed;
 		}
 		&_lg {
 			width: 450px;
