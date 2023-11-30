@@ -1,21 +1,26 @@
 <script setup lang="ts">
-import { IProduct, IProductResponse } from "~/@types";
+import { IProductResponse, IProduct } from "~/@types";
 
 const cartStore = useCartStore();
-
 const route = useRoute();
-const { $backendUrl } = useNuxtApp();
 const categoryId = computed(() => {
 	return route.query.categoryId;
 });
+
+const { $backendUrl } = useNuxtApp();
 const { data, refresh } = useFetch<IProductResponse>(
 	`${$backendUrl()}/api/product`,
 	{
-		query: {
-			categoryId,
-		},
+		key: "product",
+		method: "GET",
+		query: { categoryId },
 	}
 );
+
+const role = useCookie("role");
+const editButtonsVisibility =
+	role.value === "ADMIN" || role.value === "SUPERVISOR";
+
 const addModalVisibility = ref<boolean>(false);
 const showAddModal = () => {
 	addModalVisibility.value = true;
@@ -27,10 +32,6 @@ const onProductCreated = () => {
 	refresh({ dedupe: true });
 	hideAddModal();
 };
-const role = useCookie("role");
-const editButtonsVisibility = computed(() => {
-	return role.value === "ADMIN" || role.value === "SUPERVISOR";
-});
 
 const productToEdit = ref<IProduct>();
 const showEditModal = (p: IProduct) => {
@@ -66,7 +67,7 @@ const onProductDeleted = () => {
 					@click="showAddModal"
 					class="catalogue__add-product-button"
 				>
-					Добавить товар 
+					Добавить товар
 				</button>
 				<UITheProductCard
 					v-for="p in data?.products"
@@ -100,13 +101,11 @@ const onProductDeleted = () => {
 </template>
 
 <style lang="scss">
-@use "/assets/colors";
 .catalogue {
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
-	gap: 0.5rem;
+	gap: 20px;
 	&__add-product-button {
-		width: 321px;
 		height: 480px;
 		border-radius: 24px;
 		border: none;
