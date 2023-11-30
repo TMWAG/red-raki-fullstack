@@ -3,72 +3,66 @@ const store = useNotificationStore();
 </script>
 
 <template>
-	<div class="wrapper">
+	<div class="notification-list">
 		<TransitionGroup>
 			<div
 				v-for="n in store.notificationList"
-				class="popup"
+				class="notification-list__notification"
 				:class="n.type"
 				:key="n.id"
 			>
-				<p class="header" :class="n.type">
+				<p class="notification-list__notification-header">
 					{{ n.header }}
 					<CloseButton @close="store.dismissNotification(n.id)" />
 				</p>
-				<p class="message">{{ n.message }}</p>
+				<p class="notification-list__notification-message">{{ n.message }}</p>
 			</div>
 		</TransitionGroup>
 	</div>
 </template>
 
-<style lang="scss" scoped>
-.wrapper {
+<style lang="scss">
+.notification-list {
 	display: flex;
 	flex-direction: column;
 	flex-flow: column-reverse;
 	gap: 0.25rem;
-	width: 20rem;
+	width: 360px;
 	position: fixed;
-	bottom: 0.25rem;
-	right: 0.25rem;
+	bottom: 12px;
+	right: 12px;
 	z-index: 999;
-}
-.popup {
-	width: 20rem;
-	height: fit-content;
-	border: 2px solid;
-	border-radius: 5px;
-	background-color: $white;
-	& .header {
-		padding: 0.25rem;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		font-size: 1.125rem;
-		span {
-			transform-origin: -40% 35%;
-			transform: rotate(-45deg);
-			font-size: 2rem;
-			cursor: pointer;
+	&__notification {
+		border-radius: 20px;
+		background-color: aliceblue;
+		&-header{
+			padding: 8px;
+			border-radius: 20px 20px 0 0;
+			color: #FBFBFB;
+			background-color: #911D28;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
 		}
-	}
-	& .message {
-		padding: 0.25rem;
+		&-message {
+				padding: 8px;
+			border-radius: 0 0 20px 20px;
+		}
 	}
 }
 .error {
-	border-color: $warn;
-	color: $warn;
+	border-color: red;
+	color: red;
 }
 
 .info {
-	border-color: $accent;
-	color: $accent;
+	border-color: blue;
+	color: blue;
 }
 
 .warning {
-	border-color: $secondary;
-	color: $secondary;
+	border-color: orange;
+	color: orange;
 }
 
 .v-enter-active,
