@@ -1,41 +1,43 @@
 <script setup lang="ts">
-const phone = ref<string>(useCookie("phone").value || "");
-const phoneError = ref<string>("");
-const onPhoneChange = (e: Event) => {
-	const { value } = e.target as HTMLInputElement;
-	if (!/^((\+7|7|8)+([0-9]){10})$/.test(value)) {
-		phoneError.value = "Телефон имеет неверный формат";
-	} else {
-		phoneError.value = "";
-	}
-	phone.value = value;
-};
+const emit = defineEmits<{
+	(e: 'confirmed', phone: string, address: string): void
+}>();
 
+const phone = ref<string>(useCookie("phone").value || "");
 const address = ref<string>("");
-const addressError = ref<string>("");
-const onAddressChange = (e: Event) => {};
+
+const isUserAuthorized = Boolean(
+	useCookie("phone").value &&
+		useCookie("token").value &&
+		useCookie("role").value
+);
 </script>
 
 <template>
-	<form class="confirm_order">
+	<form class="confirm-order-form">
 		<div>
-			<ValidateableInput
-				:error="phoneError"
-				:value="phone"
-				@input="onPhoneChange"
-				label="Номер телефона"
-				placeholder="89993332211"
-				type="tel"
-			/>
-			<ValidateableInput
-				:error="addressError"
-				:value="address"
-				@input="onAddressChange"
-				label="Адрес"
-				type="text"
-				placeholder="Королёв, Терешковой, 12"
-			/>
-			<button class="button">Оформить заказ</button>
+			<ValidateableInput label="Номер телефона" lg v-slot="s">
+				<input
+					:id="s.id"
+					type="tel"
+					placeholder="+7 (999) 333 - 22 - 11"
+					v-maska
+					data-maska="+7(###)###-##-##"
+					class="labeled-input__input labeled-input__input_lg"
+					v-model="phone"
+					:disabled="isUserAuthorized"
+				/>
+			</ValidateableInput>
+			<ValidateableInput label="Адрес" lg v-slot="s">
+				<input
+					:id="s.id"
+					type="text"
+					placeholder="Королёв, Терешковой, 12"
+					v-model="address"
+					class="labeled-input__input labeled-input__input_lg"
+				/>
+			</ValidateableInput>
+			<button class="confirm-order-form__btn" @click.prevent="emit('confirmed', phone, address)">Оформить заказ</button>
 		</div>
 		<p>
 			Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse enim natus,
@@ -45,37 +47,38 @@ const onAddressChange = (e: Event) => {};
 	</form>
 </template>
 
-<style lang="scss" scoped>
-.confirm_order {
-	background-color: $white;
-	border: 2px solid $accent;
+<style lang="scss">
+@use "sass:color";
+.confirm-order-form {
+	background-color: whitesmoke;
+	border: 2px solid darkred;
 	border-radius: 5px;
 	padding: 1rem;
 	display: grid;
 	align-items: center;
 	grid-template-columns: 4fr 8fr;
-	.button {
-		font-size: 1rem;
-		height: 2rem;
-		width: fit-content;
-		padding: 0.25rem;
-		border: 2px solid $accent;
-		border-radius: 3px;
-		background-color: white;
-		transition: border-color, scale ease-in-out 0.3s;
-		margin: 0.25rem;
-		&:hover {
-			scale: 105%;
-			border-color: $primary;
-			transition: border-color, scale ease-in-out 0.3s;
-		}
+	&__btn {
+		width: 374px;
+		height: 48px;
+		border-radius: 8px;
+		background-color: #591c21;
+		color: #fbfbfb;
+		border: none;
+		outline: none;
+		transition: all ease 0.2s;
 		&:disabled {
-			background-color: $white;
+			background-color: #7b6063;
+			color: #fbfbfb80;
 			cursor: not-allowed;
 		}
-		&:disabled:hover {
-			scale: 100%;
-			border-color: $accent;
+		&:not(:disabled) {
+			&:hover {
+				background-color: color.adjust($color: #591c21, $lightness: 5%);
+			}
+			&:focus {
+				outline: solid 1px #591c21;
+				outline-offset: 1px;
+			}
 		}
 	}
 }
