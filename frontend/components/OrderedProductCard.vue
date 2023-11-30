@@ -34,11 +34,6 @@ const totalPrice = computed(() =>
 			<span class="product_name">
 				{{ orderedProduct.product.name }}
 			</span>
-			<DeleteButton
-				height="24px"
-				width="24xp"
-				@click="deleteProduct(orderedProduct.product.id)"
-			/>
 			<div class="amount_control">
 				<button @click="removeProduct(orderedProduct.product.id)">-</button>
 				<span>{{ orderedProduct.amount }}</span>
@@ -54,7 +49,7 @@ const totalPrice = computed(() =>
 	display: grid;
 	grid-template-columns: 10fr 2fr;
 	align-items: stretch;
-	border: 2px solid $accent;
+	border: 2px solid ;
 	border-radius: 5px;
 	padding: 1rem;
 	.product_info {
@@ -77,7 +72,7 @@ const totalPrice = computed(() =>
 		.amount_control {
 			display: grid;
 			grid-template-columns: repeat(3, 1fr);
-			border: 2px solid $accent;
+			border: 2px solid ;
 			border-radius: 3px;
 			button {
 				font-size: 1.5rem;
@@ -86,12 +81,12 @@ const totalPrice = computed(() =>
 				border: none;
 				transition: background-color ease-in-out 0.1s;
 				&:hover {
-					background-color: $white;
+					background-color: whitesmoke;
 				}
 			}
 			span {
 				font-size: 1.5rem;
-				border: 2px solid $accent;
+				border: 2px solid ;
 				border-top: none;
 				border-bottom: none;
 				text-align: center;
