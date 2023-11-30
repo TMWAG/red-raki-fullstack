@@ -10,7 +10,7 @@ useHead({
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .auth {
 	padding-top: 55px;
 	margin: 0 auto;
