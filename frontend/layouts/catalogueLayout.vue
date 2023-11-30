@@ -2,11 +2,10 @@
 import { ICategoryResponse } from "~/@types";
 
 const { $backendUrl } = useNuxtApp();
-const { data, refresh, pending } = await useFetch<ICategoryResponse>(
+const { data, refresh } = await useFetch<ICategoryResponse>(
 	`${$backendUrl()}/api/category`,
 	{ key: "category", method: "GET" }
 );
-
 function refreshCategories() {
 	refresh({ dedupe: true });
 }
@@ -24,23 +23,17 @@ useHead({
 </script>
 
 <template>
-	<div v-if="pending">Loading...</div>
-	<CategoryRow
-		v-else
+	<div>
+		<CategoryRow
 		:categoryList="data?.categories"
-		@created="refreshCategories"
-		@deleted="refreshCategories"
-		@updated="refreshCategories"
-	/>
-	<div class="catalogue__wrapper">
-		<slot/>
+		@created="refreshCategories()"
+		@deleted="refreshCategories()"
+		@updated="refreshCategories()"
+		/>
+		<slot />
+
 	</div>
 </template>
 
 <style lang="scss">
-.catalogue_wrapper {
-	display: grid;
-	grid-template-columns: 1fr 4fr;
-	gap: 20px;
-}
 </style>
