@@ -1,6 +1,10 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import prisma from "../../utils/prisma";
-import { createOrderInput, getOrderInfoInput } from "./order.schema";
+import {
+	createOrderInput,
+	getOrderInfoInput,
+	getOrdersByStatusInput,
+} from "./order.schema";
 import { JwtPayload } from "../../@types";
 import EventEmitter from "events";
 
@@ -34,8 +38,23 @@ export async function createOrderHandler(
 			orderedProducts: { createMany: { data: [...orderedProducts] } },
 		},
 	});
-	event.emit('newOrder', order);
+	event.emit("newOrder", order);
 	return rep.code(201).send(order);
+}
+
+export async function getAllOrdersHandler(
+	req: FastifyRequest<{ Querystring: getOrdersByStatusInput }>,
+	rep: FastifyReply
+) {
+	const take = req.query.limit || 12;
+	const page = req.query.page || 1;
+	const skip = take * page - take;
+	const orders = await prisma.order.findMany({ 
+		take,
+		skip,
+		orderBy: {createdAt : "desc"}
+	});
+	return rep.code(200).send(orders);
 }
 
 export async function getAllUserOrdersHandler(
@@ -50,12 +69,7 @@ export async function getAllUserOrdersHandler(
 	const count = await prisma.order.count({ where: { phone: user.phone } });
 	const orders = await prisma.order.findMany({
 		where: { phone: user.phone },
-		select: {
-			id: true,
-			address: true,
-			createdAt: true,
-			total: true,
-			status: true,
+		include: {
 			orderedProducts: {
 				select: {
 					amount: true,
@@ -88,6 +102,7 @@ export async function getOrderInfoHandler(
 			address: true,
 			total: true,
 			createdAt: true,
+			phone: true,
 			status: true,
 			orderedProducts: {
 				select: {
@@ -105,11 +120,8 @@ export async function getOrderInfoHandler(
 	return rep.code(200).send(order);
 }
 
-export async function newOrdersHandler(
-	req: FastifyRequest,
-	rep: FastifyReply
-) {
-	event.once('newOrder', (order) => {
+export async function newOrdersHandler(req: FastifyRequest, rep: FastifyReply) {
+	event.once("newOrder", (order) => {
 		return rep.code(200).send(order);
-	})
+	});
 }
