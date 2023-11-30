@@ -17,9 +17,9 @@
 	text-transform: uppercase;
 	background-image: linear-gradient(
 		to right,
-		$secondary,
-		$secondary 50%,
-		$primary 50%
+		#591C21,
+		#591C21 50%,
+		#911D28 50%
 	);
 	background-size: 200% 100%;
 	background-position: -100%;
@@ -31,7 +31,7 @@
 	transition: all 0.3s ease-in-out;
 	&:before {
 		content: "";
-		background: $primary;
+		background: #591C21;
 		display: block;
 		position: absolute;
 		bottom: -3px;
