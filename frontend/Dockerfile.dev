@@ -1,5 +1,11 @@
 FROM node:20-alpine
 
+ENV LANG=ru_RU
+
+RUN apk add --no-cache tzdata 
+
+ENV TZ=Europe/Moscow
+
 WORKDIR /frontend
 
 COPY ./package*.json ./
