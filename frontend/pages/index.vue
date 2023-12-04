@@ -80,7 +80,6 @@ useHead({
 	background-color: whitesmoke;
 	border: 1px solid aqua;
 	border-radius: 5px;
-	padding: 1rem;
   h1 {
     font-size: 2rem;
     font-weight: 500;
