@@ -49,7 +49,7 @@ function onModalClose() {
 					:id="s.id"
 					placeholder="Раки"
 					type="text"
-					class="labeled-input__input labeled-input__input_lg"
+					class="labeled-input__input lg"
 					v-model="name"
 					@input="validateName"
 					@focus="validateName"
