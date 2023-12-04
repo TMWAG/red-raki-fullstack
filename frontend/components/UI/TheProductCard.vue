@@ -17,6 +17,8 @@ const role = useCookie("role");
 const editButtonsVisibility = computed(() => {
 	return role.value === "ADMIN" || role.value === "SUPERVISOR";
 });
+
+const cartStore = useCartStore();
 </script>
 
 <template>
@@ -98,7 +100,7 @@ const editButtonsVisibility = computed(() => {
 					>{{ n }}</span
 				>
 			</div>
-		</div>
+		</div>	
 		<div class="product-card__price-cart-btn">
 			<span class="product-card__price"
 				>{{
@@ -108,7 +110,29 @@ const editButtonsVisibility = computed(() => {
 					})
 				}}
 			</span>
-			<button class="product-card__cart-btn" @click="emit('add-to-cart')">
+			<div
+				v-if="cartStore.isInCart(product.id)"
+				class="product-card__cart-control-btn-count"
+			>
+				<button
+					class="product-card__cart-control-btn"
+					@click="cartStore.removeProduct(product.id)"
+				>
+					-
+				</button>
+				<span class="product-card__cart-control-count">{{ cartStore.isInCart(product.id) }}</span>
+				<button
+					class="product-card__cart-control-btn"
+					@click="cartStore.addProduct(product)"
+				>
+					+
+				</button>
+			</div>
+			<button
+				v-else
+				class="product-card__cart-btn"
+				@click="emit('add-to-cart')"
+			>
 				В корзину
 			</button>
 		</div>
@@ -116,7 +140,7 @@ const editButtonsVisibility = computed(() => {
 </template>
 
 <style lang="scss">
-@use 'sass:color';
+@use "sass:color";
 .product-card {
 	position: relative;
 	display: flex;
@@ -198,13 +222,56 @@ const editButtonsVisibility = computed(() => {
 		font-style: normal;
 		font-weight: 700;
 		line-height: normal;
-		transition: all ease .2s;
+		transition: all ease 0.2s;
 		&:hover {
-			background-color: color.adjust($color: #911d28, $lightness: 5%)
+			background-color: color.adjust($color: #911d28, $lightness: 5%);
 		}
 		&:active {
 			scale: 101%;
 		}
+	}
+	&__cart-control-btn-count {
+		height: 32px;
+		width: 132px;
+		border-radius: 14px;
+		display: flex;
+		justify-content: space-evenly;
+		align-items: center;
+		color: #fbfbfb;
+		background-color: #911d28;
+	}
+	&__cart-control-btn {
+		background-color: #911d28;
+		font-size: 24px;
+		font-style: normal;
+		font-weight: 600;
+		line-height: normal;
+		font-family: "Open Sans";
+		width: 43px;
+		height: 100%;
+		color: #fbfbfb;
+		outline: none;
+		border: none;
+		cursor: pointer;
+		&:first-child {
+			border-radius: 14px 0 0 14px;
+		}
+		&:last-child {
+			border-radius: 0 14px 14px 0;
+		}
+		&:hover {
+			background-color: color.adjust($color: #911d28, $lightness: 5%);
+		}
+	}
+	&__cart-control-count {
+		width: 43px;
+		text-align: center;
+		display: block;
+		font-family: "Open Sans";
+		font-size: 16px;
+		font-style: normal;
+		font-weight: 700;
+		line-height: normal;
 	}
 }
 </style>
