@@ -58,7 +58,7 @@ async function deleteProduct() {
 					:id="s.id"
 					type="text"
 					:placeholder="product.name"
-					class="labeled-input__input labeled-input__input_lg"
+					class="labeled-input__input lg"
 					v-model="delConfirmation"
 					@input="validateConfirmation"
 					@focus="validateConfirmation"

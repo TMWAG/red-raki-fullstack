@@ -68,7 +68,7 @@ onMounted(() => {
 					placeholder="Раки"
 					@input="validateNewName"
 					@focus="validateNewName"
-					class="labeled-input__input labeled-input__input_lg"
+					class="labeled-input__input lg"
 				/>
 			</ValidateableInput>
 			<span v-if="newNameError" class="edit-category-modal__error">{{

@@ -59,7 +59,7 @@ function onModalClose() {
 					:id="s.id"
 					type="text"
 					:placeholder="props.categoryToDelete.name"
-					class="labeled-input__input labeled-input__input_lg"
+					class="labeled-input__input lg"
 					v-model="deleteConfirmation"
 					@input="validateConfirmation"
 					@focus="validateConfirmation"

@@ -135,7 +135,7 @@ const onSend = async () => {
 					<input
 						:id="s.id"
 						:placeholder="product.name"
-						class="labeled-input__input labeled-input__input_lg"
+						class="labeled-input__input lg"
 						type="text"
 						v-model="newName"
 						@input="validateName"
@@ -146,7 +146,7 @@ const onSend = async () => {
 					<textarea
 						:id="s.id"
 						v-model="newDescription"
-						class="labeled-input__input labeled-input__input_lg"
+						class="labeled-input__input lg"
 						>{{ newDescription }}</textarea
 					>
 				</ValidateableInput>
@@ -160,7 +160,7 @@ const onSend = async () => {
 						:id="s.id"
 						type="text"
 						placeholder="1200.20"
-						class="labeled-input__input labeled-input__input_lg"
+						class="labeled-input__input lg"
 						v-model="newPrice"
 						v-maska
 						data-maska="0.99"
@@ -173,7 +173,7 @@ const onSend = async () => {
 					<input
 						:id="s.id"
 						type="text"
-						class="labeled-input__input labeled-input__input_lg"
+						class="labeled-input__input lg"
 						placeholder="Раки до 30 гр; В килограмме примерно 20 штук"
 						v-model="newNotes"
 					/>
