@@ -80,9 +80,13 @@ const id = `input-${String(Math.floor(Math.random() * 1000))}`;
 			color: color.adjust($color: #121212, $lightness: 35%);
 			cursor: not-allowed;
 		}
-		&_lg {
+		&.lg {
 			width: 450px;
 			height: 44px;
+		}
+		&.sm {
+			width: 264px;
+			height: 33px;
 		}
 	}
 	&__switch {
