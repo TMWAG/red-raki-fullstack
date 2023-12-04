@@ -87,12 +87,11 @@ const isPrivileged = computed(() => {
 	background-color: #ebe3e1;
 	padding: 5px 0;
 	&__nav {
-		width: inherit;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 		justify-items: center;
-		width: 70%;
+		width: 69vw;
 	}
 	&__logo {
 		margin-right: 20px;
@@ -112,15 +111,17 @@ const isPrivileged = computed(() => {
 		min-width: 400px;
 	}
 	&__user {
-		width: 500px;
-		list-style: none;
+		align-items: center;
 		display: flex;
-		justify-content: flex-end;
 		gap: 20px;
+		justify-content: flex-end;
+		justify-items: flex-end;
+		list-style: none;
+		width: 500px;
 	}
 }
 .main__wrapper {
-	width: 70%;
+	width: 70vw;
 	margin: 0 auto;
 	padding-top: 64px;
 }
