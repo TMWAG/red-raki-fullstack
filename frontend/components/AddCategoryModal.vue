@@ -55,7 +55,7 @@ function onModalClose() {
 					@focus="validateName"
 				/>
 			</ValidateableInput>
-			<span v-if="nameError" class="add-category-modal__error">{{
+			<span v-show="nameError" class="add-category-modal__error">{{
 				nameError
 			}}</span>
 			<button
@@ -75,11 +75,11 @@ function onModalClose() {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	gap: 0.5rem 0;
 	padding: 1rem;
 	&__error {
 		width: 100%;
 		padding-left: 3px;
-		padding-bottom: 19px;
 		color: #d40000;
 		font-family: "Raleway";
 		font-size: 15px;
