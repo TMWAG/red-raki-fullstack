@@ -4,6 +4,11 @@ const role = useCookie("role");
 const isPrivileged = computed(() => {
 	return role.value === "ADMIN" || role.value === "SUPERVISOR";
 });
+function logout() {
+	role.value = undefined;
+	useCookie('phone').value = undefined;
+	useCookie('token').value = undefined;
+}
 </script>
 
 <template>
@@ -56,15 +61,18 @@ const isPrivileged = computed(() => {
 					<li>
 						<UITheLink to="/cart"> Корзина </UITheLink>
 					</li>
-					<li>
-						<UITheLink v-if="token" to="/me">Профиль</UITheLink>
-						<UITheLink v-else to="/login">Войти</UITheLink>
-					</li>
+						<!-- <li>
+							<UITheLink v-if="token" to="/me">Профиль</UITheLink>
+							<UITheLink v-else to="/login">Войти</UITheLink>
+						</li> -->
 					<li v-if="isPrivileged">
 						<UITheLink to="/orders">Заказы</UITheLink>
 					</li>
-					<li v-if="role === 'ADMIN'">
+					<!-- <li v-if="role === 'ADMIN'">
 						<UITheLink to="/users">Пользователи</UITheLink>
+					</li> -->
+					<li v-if="token">
+						<UITheLink @click.stop="logout">Выйти</UITheLink>
 					</li>
 				</ul>
 			</div>
@@ -73,6 +81,9 @@ const isPrivileged = computed(() => {
 	<main class="main__wrapper">
 		<slot />
 	</main>
+	<footer v-if="!token" class="footer">
+		<UITheLink to="/login">Администрирование</UITheLink>
+	</footer>
 	<NotificationPopup />
 </template>
 
@@ -91,7 +102,7 @@ const isPrivileged = computed(() => {
 		justify-content: space-between;
 		align-items: center;
 		justify-items: center;
-		width: 69vw;
+		width: 70vw;
 	}
 	&__logo {
 		margin-right: 20px;
@@ -122,7 +133,15 @@ const isPrivileged = computed(() => {
 }
 .main__wrapper {
 	width: 70vw;
+	min-height: 92vh;
 	margin: 0 auto;
 	padding-top: 64px;
+}
+.footer {
+	display: flex;
+	width: 100%;
+	justify-content: center;
+	background-color: #ebe3e1;
+	padding: 25px 0px;
 }
 </style>
