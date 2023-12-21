@@ -109,6 +109,7 @@ const onCreateProduct = async () => {
 	body.set("description", description.value);
 	body.set("price", price.value);
 	body.set("categoryId", categoryId.value);
+	body.set("notes", notes.value);
 	body.set("image", image.value);
 	const res = await $fetch<ICreateProductResponse>(
 		`${$backendUrl()}/api/product`,
@@ -191,13 +192,13 @@ const onCreateProduct = async () => {
 				</ValidateableInput>
 			</div>
 			<div class="add-product-form__errors">
-				<span v-if="sendButtonDisabled" class="add-product-form__error">
+				<span v-show="sendButtonDisabled" class="add-product-form__error">
 					Есть незаполненные поля</span
 				>
-				<span v-if="priceError" class="add-product-form__error">
+				<span v-show="priceError" class="add-product-form__error">
 					{{ priceError }}</span
 				>
-				<span v-if="imageError" class="add-product-form__error">
+				<span v-show="imageError" class="add-product-form__error">
 					{{ imageError }}</span
 				>
 			</div>
