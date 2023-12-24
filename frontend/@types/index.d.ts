@@ -63,3 +63,16 @@ export interface IOrderResponse {
 	updatedAt: string;
 }[]
 
+export interface ICreateUserResponse {
+	id: string;
+	name: string;
+	surname: string;
+	login: string;
+	role: "ADMIN" | "SUPERVISOR"
+}
+
+export interface IUserListResponse {
+	count: number;
+	users: ICreateUserResponse[];
+}
+
