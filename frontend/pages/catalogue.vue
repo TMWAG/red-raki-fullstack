@@ -18,8 +18,9 @@ const { data, refresh } = useFetch<IProductResponse>(
 );
 
 const role = useCookie("role");
-const editButtonsVisibility =
-	role.value === "ADMIN" || role.value === "SUPERVISOR";
+const editButtonsVisibility = computed(
+	() => role.value === "ADMIN" || role.value === "SUPERVISOR"
+);
 
 const addModalVisibility = ref<boolean>(false);
 const showAddModal = () => {
@@ -59,7 +60,7 @@ const onProductDeleted = () => {
 </script>
 
 <template>
-	<div>
+	<div style="margin-bottom: 24px;">
 		<NuxtLayout name="catalogue-layout">
 			<div class="catalogue">
 				<button
