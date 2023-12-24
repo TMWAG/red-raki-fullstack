@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,14 +11,14 @@ model Product {
   id              String           @id @default(uuid())
   name            String           @map("product_name")
   description     String?          @map("product_descripton")
-  notes           String?
   categoryId      String
   price           Int
-  image           String
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
-  category        Category         @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  image           String
+  notes           String?
   orderedProducts OrderedProduct[]
+  category        Category         @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 }
 
 model Category {
@@ -30,21 +27,14 @@ model Category {
   products Product[]
 }
 
-enum OrderStatuses {
-  ACCEPTED
-  IN_DELIVERY
-  DELIVERED
-}
-
 model Order {
   id              String           @id @default(uuid())
   phone           String
-  userPhone       User?            @relation(fields: [phone], references: [phone])
   address         String
-  total           Int
-  status          OrderStatuses    @default(ACCEPTED)
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
+  total           Int
+  status          OrderStatuses    @default(ACCEPTED)
   orderedProducts OrderedProduct[]
 }
 
@@ -52,23 +42,28 @@ model OrderedProduct {
   id        String   @id @default(uuid())
   orderId   String
   productId String
-  amount    Int
   createdAt DateTime @default(now())
+  amount    Int
   order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
-model User {
+model Employee {
   id       String    @id @default(uuid())
-  phone    String    @unique
+  login    String    @unique
   password String
-  name     String?
-  role     UserRoles @default(BUYER)
-  orders   Order[]
+  role     EmployeeRoles
+  name     String
+  surname  String?
 }
 
-enum UserRoles {
-  BUYER
+enum OrderStatuses {
+  ACCEPTED
+  IN_DELIVERY
+  DELIVERED
+}
+
+enum EmployeeRoles {
   SUPERVISOR
   ADMIN
 }
