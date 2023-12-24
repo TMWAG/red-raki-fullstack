@@ -3,8 +3,10 @@ import { CreateUserInput, LoginUserInput } from "./user.schema";
 import bcrypt from "bcryptjs";
 import prisma from "../../utils/prisma";
 import { app } from "../..";
+import { randomUUID } from "crypto";
+import { transliterate } from "../../utils/tansliterate";
 
-export async function registerUserHandler(
+/* export async function registerUserHandler(
 	req: FastifyRequest<{ Body: CreateUserInput }>,
 	rep: FastifyReply
 ) {
@@ -29,30 +31,40 @@ export async function registerUserHandler(
 	} catch (e) {
 		return rep.code(500).send(e);
 	}
+} */
+
+export async function addSupervisorHandler(
+	req: FastifyRequest<{ Body: CreateUserInput }>,
+	rep: FastifyReply
+) {
+	const login = `${transliterate(req.body.name)}_${transliterate(req.body.surname)}`;
+	const newSupervisor = await prisma.employee.create({
+		data: {
+			password: await bcrypt.hash(login, 10),
+			name: req.body.name,
+			login,
+			surname: req.body.surname,
+			role: req.body.role,
+		},
+	});
+	return rep.code(201).send(newSupervisor);
 }
 
 export async function loginUserHandler(
 	req: FastifyRequest<{ Body: LoginUserInput }>,
 	rep: FastifyReply
 ) {
-  if (!req.body.phone) {
-    return rep.code(400).send({
-      error: "USR_LGN_NPH",
-      message: "Не указан номер телефона",
-      detail: "Для входа необходимо указать номер телефона",
-    });
-  }
-	const user = await prisma.user.findUnique({
-		where: { phone: req.body.phone },
+	const user = await prisma.employee.findUnique({
+		where: { login: req.body.login },
 	});
 	if (!user) {
 		return rep.code(404).send({
       error: "USR_LGN_NF",
       message: "Пользователь не найден",
-      detail: `Пользователь с номером телефона ${req.body.phone} не найден`,
+      detail: `Пользователь с логином ${req.body.login} не найден`,
     });
 	}
-  if (!(await bcrypt.compare(req.body.password, user.password))) {
+  if (!(await bcrypt.compare(req.body.password, user.password!))) {
     return rep.code(400).send({
       error: "USR_LGN_WPW",
       message: "Неверный пароль",
@@ -62,22 +74,23 @@ export async function loginUserHandler(
 	return rep.send({
 		...user,
 		token: app.jwt.sign({ id: user.id }),
-	});
+	});	
 }
 
 export async function getAllUsersHandler(
 	req: FastifyRequest,
 	rep: FastifyReply
 ) {
-	const users = await prisma.user.findMany({
+	const users = await prisma.employee.findMany({
 		select: {
 			id: true,
 			name: true,
-			phone: true,
+			surname: true,
 			role: true,
+			login: true,
 		},
 	});
-	const count = await prisma.user.count();
+	const count = await prisma.employee.count();
 	return {
 		count,
 		users,
