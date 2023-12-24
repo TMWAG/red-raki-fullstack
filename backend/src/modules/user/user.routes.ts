@@ -1,10 +1,10 @@
 import { FastifyInstance } from "fastify";
-import { getAllUsersHandler, loginUserHandler, registerUserHandler } from "./user.service";
-import { createUserResponseSchema, createUserSchema, getAllUsersResponseSchema, loginUserResponseSchema, loginUserSchema } from "./user.schema";
+import { addSupervisorHandler, getAllUsersHandler, loginUserHandler, /* loginUserHandler */ } from "./user.service";
+import { CreateUserInput, createUserResponseSchema, createUserSchema, getAllUsersResponseSchema, loginUserResponseSchema, loginUserSchema } from "./user.schema";
 import { errorResponseSchema } from "../../utils/errorResponseSchema";
 
 export default async function userRoutes(app: FastifyInstance) {
-  app.post(
+  /* app.post(
     '/register',
     {
       schema: { 
@@ -16,7 +16,7 @@ export default async function userRoutes(app: FastifyInstance) {
       },
     },
     registerUserHandler,
-  );
+  ); */
   app.post(
     '/login',
     {
@@ -30,6 +30,19 @@ export default async function userRoutes(app: FastifyInstance) {
       },
     },
     loginUserHandler,
+  );
+  app.post<{ Body: CreateUserInput }>(
+    '/add_user',
+    {
+      preHandler: [app.authorizeAdmin],
+      schema: {
+        body: createUserSchema,
+        response: {
+          201: createUserResponseSchema
+        },
+      },
+    },
+    addSupervisorHandler
   );
   app.get(
     '/all',
