@@ -10,6 +10,7 @@ services:
       - PG_GATA=/var/lib/postgresql/data
     volumes:
       - $HOME/docker/volumes/postgres/:/var/lib/postgresql/data
+    restart: always
 
   backend:
     container_name: backend
@@ -52,3 +53,4 @@ services:
     volumes:
       - ./docker/nginx/:/etc/nginx/conf.d:ro
       - ./backend/src/static/:/var/www/static:rw
+    restart: always
