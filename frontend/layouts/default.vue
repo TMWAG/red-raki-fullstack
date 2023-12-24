@@ -8,6 +8,7 @@ function logout() {
 	role.value = undefined;
 	useCookie('phone').value = undefined;
 	useCookie('token').value = undefined;
+	return navigateTo("/")
 }
 </script>
 
@@ -68,9 +69,9 @@ function logout() {
 					<li v-if="isPrivileged">
 						<UITheLink to="/orders">Заказы</UITheLink>
 					</li>
-					<!-- <li v-if="role === 'ADMIN'">
+					<li v-if="role === 'ADMIN'">
 						<UITheLink to="/users">Пользователи</UITheLink>
-					</li> -->
+					</li>
 					<li v-if="token">
 						<UITheLink @click.stop="logout">Выйти</UITheLink>
 					</li>
