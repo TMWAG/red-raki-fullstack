@@ -43,7 +43,7 @@ function onModalClose() {
 
 <template>
 	<TheModal header="Добавление категории" @close="onModalClose">
-		<div class="add-category-modal">
+		<form class="add-category-modal">
 			<UITextInput
 				label="Название новой категории"
 				placeholder="Раки"
@@ -54,12 +54,12 @@ function onModalClose() {
 			<UIErrorList :errors-list="[nameError]" />
 			<button
 				class="add-category-modal__btn"
-				@click="addCategory"
+				@click.prevent="addCategory"
 				:disabled="nameError.length !== 0 || name.length === 0"
 			>
 				Добавить категорию
 			</button>
-		</div>
+		</form>
 	</TheModal>
 </template>
 
