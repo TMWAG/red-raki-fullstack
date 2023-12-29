@@ -1,10 +1,11 @@
 <script setup lang="ts">
 const props = defineProps<{
 	list?: { id: string; name: string }[];
+	label: string;
 	selected: string;
 }>();
 const emit = defineEmits<{
-	(e: "selected", id: string): void;
+	(e: "selected", id: any): void;
 }>();
 const open = ref<boolean>(false);
 function select(id: string) {
@@ -14,26 +15,28 @@ function select(id: string) {
 </script>
 
 <template>
-	<div class="select" tabindex="0" @blur="open = false">
-		<div
-			class="select__list"
-			:class="open ? 'select__list_open' : ''"
-			@click="open = !open"
-			@focus="open = true"
-		>
-			{{ selected }}
-		</div>
-		<div class="select__items" :class="!open ? 'select__items_hidden' : ''">
+	<UIInputWrapper :label="label">
+		<div class="select" tabindex="0" @blur="open = false">
 			<div
-				v-for="(option, i) of list"
-				class="select__item"
-				:key="`select-list-item-${i}`"
-				@click.self="select(option.id)"
+				class="select__list"
+				:class="open ? 'select__list_open' : ''"
+				@click="open = !open"
+				@focus="open = true"
 			>
-				{{ option.name }}
+				{{ selected }}
+			</div>
+			<div class="select__items" :class="!open ? 'select__items_hidden' : ''">
+				<div
+					v-for="(option, i) of list"
+					class="select__item"
+					:key="`select-list-item-${i}`"
+					@click.self="select(option.id)"
+				>
+					{{ option.name }}
+				</div>
 			</div>
 		</div>
-	</div>
+	</UIInputWrapper>
 </template>
 
 <style lang="scss">
@@ -56,7 +59,7 @@ function select(id: string) {
 		position: relative;
 	}
 	&__items {
-		top: -50%;
+		top: 0%;
 		display: block;
 		position: absolute;
 		animation: "show-select-options" 0.2s ease;
