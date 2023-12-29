@@ -31,5 +31,3 @@ function updateValue(e: Event) {
     />
   </UIInputWrapper>
 </template>
-
-<style></style>
