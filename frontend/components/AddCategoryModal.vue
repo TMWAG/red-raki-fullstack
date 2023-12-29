@@ -71,17 +71,6 @@ function onModalClose() {
 	align-items: center;
 	gap: 0.5rem 0;
 	padding: 1rem;
-	&__error {
-		width: 100%;
-		padding-left: 3px;
-		color: #d40000;
-		font-family: "Raleway";
-		font-size: 15px;
-		font-style: normal;
-		font-weight: 600;
-		line-height: normal;
-		letter-spacing: 0.3px;
-	}
 	&__btn {
 		width: 450px;
 		height: 48px;
