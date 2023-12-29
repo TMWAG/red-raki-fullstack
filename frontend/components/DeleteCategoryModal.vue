@@ -52,28 +52,31 @@ function onModalClose() {
 </script>
 
 <template>
-	<TheModal @close="onModalClose" :header="`Удаление категории ${categoryToDelete.name}`">
-		<div class="delete-category-modal">
-			<ValidateableInput label="Название удаляемой категории" lg v-slot="s">
-				<input
-					:id="s.id"
-					type="text"
-					:placeholder="props.categoryToDelete.name"
-					class="labeled-input__input lg"
-					v-model="deleteConfirmation"
-					@input="validateConfirmation"
-					@focus="validateConfirmation"
-				/>
-			</ValidateableInput>
-			<span class="delete-category-modal__error">{{ confirmationError }}</span>
+	<TheModal
+		@close="onModalClose"
+		:header="`Удаление категории ${categoryToDelete.name}`"
+	>
+		<form class="delete-category-modal">
+			<UITextInput
+				label="Название удаляемой категории"
+				:placeholder="categoryToDelete.name"
+				v-model="deleteConfirmation"
+				@input="validateConfirmation"
+				@focus="validateConfirmation"
+			/>
+			<UIErrorList
+				:errors-list="[
+					confirmationError,
+				]"
+			/>
 			<button
 				class="delete-category-modal__btn"
-				@click="deleteCategory"
+				@click.prevent="deleteCategory"
 				:disabled="deleteConfirmation !== props.categoryToDelete.name"
 			>
 				Удалить категорию
 			</button>
-		</div>
+		</form>
 	</TheModal>
 </template>
 
@@ -85,18 +88,6 @@ function onModalClose() {
 	align-items: center;
 	gap: 0.5rem 0;
 	padding: 1rem;
-	&__error {
-		width: 100%;
-		padding-left: 3px;
-		padding-bottom: 19px;
-		color: #d40000;
-		font-family: "Raleway";
-		font-size: 15px;
-		font-style: normal;
-		font-weight: 600;
-		line-height: normal;
-		letter-spacing: 0.3px;
-	}
 	&__btn {
 		width: 450px;
 		height: 48px;
@@ -120,8 +111,8 @@ function onModalClose() {
 			outline-offset: 1px;
 		}
 		&:disabled {
-			background-color: #7B6063;
-			color: #FBFBFB80;
+			background-color: #7b6063;
+			color: #fbfbfb80;
 		}
 	}
 }
