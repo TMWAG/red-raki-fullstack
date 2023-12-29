@@ -70,18 +70,18 @@ const editButtonsVisibility = computed(() => {
 					Добавить категорию
 				</span>
 			</div>
-			<AddCategoryModal
+			<FormAddCategory
 				v-if="addModalVisibility"
 				@canceled="hideAddModal"
 				@category-created="onCategoryCreated"
 			/>
-			<EditCategoryModal
+			<FormEditCategory
 				v-if="categoryToUpdate"
 				:category-to-update="categoryToUpdate"
 				@canceled="hideEditModal"
 				@edited="onCategoryEdited"
 			/>
-			<DeleteCategoryModal
+			<FormDeleteCategory
 				v-if="categoryToDelete"
 				:category-to-delete="categoryToDelete"
 				@canceled="hideDelModal"
