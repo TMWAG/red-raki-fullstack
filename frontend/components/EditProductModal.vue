@@ -16,26 +16,19 @@ const emit = defineEmits<{
 	(e: "closed"): void;
 }>();
 const newName = ref<string>(props.product.name);
-const nameError = ref<string>("");
+const nameError = ref<string>();
 function validateName() {
 	if (newName.value.length === 0) {
 		nameError.value = "Название должно быть указано";
 	} else {
-		nameError.value = "";
+		nameError.value = undefined;
 	}
 }
 
 const newDescription = ref<string>(props.product.description);
 
 const newPrice = ref<string>(String(props.product.price));
-const priceError = ref<string>("");
-function validatePrice() {
-	if (newPrice.value.length === 0) {
-		priceError.value = "Цена должна быть указана";
-	} else {
-		priceError.value = "";
-	}
-}
+const priceError = ref<string>();
 
 const newNotes = ref<string>(props.product.notes);
 
@@ -80,7 +73,7 @@ function onImageChange(e: Event) {
 			return;
 		} else {
 			newImage.value = selectedImage;
-			imageError.value = "";
+			imageError.value = undefined;
 		}
 	} else {
 		imageError.value = "Формат изображения не поддерживается";
@@ -130,77 +123,36 @@ const onSend = async () => {
 		@close="emit('closed')"
 	>
 		<div class="edit-product-form">
-			<div class="edit-product-form__inputs">
-				<ValidateableInput label="Название" v-slot="s" lg>
-					<input
-						:id="s.id"
-						:placeholder="product.name"
-						class="labeled-input__input lg"
-						type="text"
-						v-model="newName"
-						@input="validateName"
-						@focus="validateName"
-					/>
-				</ValidateableInput>
-				<ValidateableInput label="Описание товара" v-slot="s" lg>
-					<textarea
-						:id="s.id"
-						v-model="newDescription"
-						class="labeled-input__input lg"
-						>{{ newDescription }}</textarea
-					>
-				</ValidateableInput>
-				<ValidateableInput
-					:value="newPrice"
+			<form class="edit-product-form__inputs">
+				<UITextInput
+					label="Название товара"
+					:placeholder="product.name"
+					v-model="newName"
+					@input="validateName"
+					@focus="validateName"
+				/>
+				<UITextInput label="Описание товара" v-model="newDescription" />
+				<UINumberInput
 					label="Цена за единицу"
-					v-slot="s"
-					lg
-				>
-					<input
-						:id="s.id"
-						type="text"
-						placeholder="1200.20"
-						class="labeled-input__input lg"
-						v-model="newPrice"
-						v-maska
-						data-maska="0.99"
-						data-maska-tokens="0:\d:multiple|9:\d:optional"
-						@input="validatePrice"
-						@focus="validatePrice"
-					/>
-				</ValidateableInput>
-				<ValidateableInput label="Примечания" v-slot="s" lg>
-					<input
-						:id="s.id"
-						type="text"
-						class="labeled-input__input lg"
-						placeholder="Раки до 30 гр; В килограмме примерно 20 штук"
-						v-model="newNotes"
-					/>
-				</ValidateableInput>
+					v-model="newPrice"
+					placeholder="1234.56"
+				/>
+				<UITextInput
+					label="Примечания"
+					placeholder="Раки до 30 гр; В килограмме примерно 20 штук"
+					v-model="newNotes"
+				/>
 				<ValidateableInput label="Изображение" v-slot="s" lg>
 					<input :id="s.id" type="file" @input="onImageChange" />
 				</ValidateableInput>
-				<ValidateableInput label="Категория" v-slot="s" lg>
-					<UITheSelect
-						:list="data?.categories"
-						:selected="newCategoryName"
-						@selected="onSelected"
-						:id="s.id"
-					/>
-				</ValidateableInput>
-			</div>
-			<div class="edit-product-form__errors">
-				<span v-if="nameError" class="edit-product-form__error">
-					{{ nameError }}
-				</span>
-				<span v-if="priceError" class="edit-product-form__error">
-					{{ priceError }}
-				</span>
-				<span v-if="imageError" class="edit-product-form__error">
-					{{ imageError }}
-				</span>
-			</div>
+				<UITheSelect
+					label="Категория"
+					:list="data?.categories"
+					:selected="newCategoryName"
+					@selected="onSelected"
+				/>
+			</form>
+			<UIErrorList :errors-list="[nameError, priceError, imageError]" />
 			<button
 				class="edit-product-form__btn"
 				:disabled="sendButtonDisabled"
@@ -223,7 +175,6 @@ const onSend = async () => {
 	&__inputs {
 		display: flex;
 		flex-direction: column;
-		align-items: flex-start;
 		gap: 6px;
 	}
 	&__errors {
