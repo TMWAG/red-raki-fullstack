@@ -59,29 +59,27 @@ onMounted(() => {
 		@close="onModalClose"
 		:header="`Изменение категории ${categoryToUpdate.name}`"
 	>
-		<div class="edit-category-modal">
-			<ValidateableInput label="Новое название категории" lg v-slot="s">
-				<input
-					:id="s.id"
-					type="text"
-					v-model="newName"
-					placeholder="Раки"
-					@input="validateNewName"
-					@focus="validateNewName"
-					class="labeled-input__input lg"
-				/>
-			</ValidateableInput>
-			<span v-if="newNameError" class="edit-category-modal__error">{{
-				newNameError
-			}}</span>
+		<form class="edit-category-modal">
+			<UITextInput
+				label="Новое название категории"
+				placeholder="Раки"
+				v-model="newName"
+				@input="validateNewName"
+				@focus="validateNewName"
+			/>
+			<UIErrorList
+				:errors-list="[
+					newNameError
+				]"
+			/>
 			<button
 				class="edit-category-modal__btn"
-				@click="updateCategory"
+				@click.prevent="updateCategory"
 				:disabled="newNameError.length !== 0"
 			>
 				Сохранить изменения
 			</button>
-		</div>
+		</form>
 	</TheModal>
 </template>
 
@@ -119,18 +117,6 @@ onMounted(() => {
 			background-color: #7B6063;
 			color: #FBFBFB80;
 		}
-	}
-	&__error {
-		width: 100%;
-		padding-left: 3px;
-		padding-bottom: 19px;
-		color: #d40000;
-		font-family: "Raleway";
-		font-size: 15px;
-		font-style: normal;
-		font-weight: 600;
-		line-height: normal;
-		letter-spacing: 0.3px;
 	}
 }
 </style>
