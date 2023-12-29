@@ -52,21 +52,15 @@ async function deleteProduct() {
 		:header="`Удаление товара ${product.name}`"
 		@close="emit('canceled')"
 	>
-		<div class="delete-product-modal">
-			<ValidateableInput lg label="Подтверждение удаления" v-slot="s">
-				<input
-					:id="s.id"
-					type="text"
-					:placeholder="product.name"
-					class="labeled-input__input lg"
-					v-model="delConfirmation"
-					@input="validateConfirmation"
-					@focus="validateConfirmation"
-				/>
-			</ValidateableInput>
-			<span v-if="confirmationError" class="delete-product-modal__error">{{
-				confirmationError
-			}}</span>
+		<form class="delete-product-modal">
+			<UITextInput
+				label="Название товара"
+				:placeholder="product.name"
+				v-model="delConfirmation"
+				@input="validateConfirmation"
+				@focus="validateConfirmation"
+			/>
+			<UIErrorList :errors-list="[confirmationError]" />
 			<button
 				class="delete-product-modal__btn"
 				@click.prevent="deleteProduct"
@@ -74,7 +68,7 @@ async function deleteProduct() {
 			>
 				Удалить
 			</button>
-		</div>
+		</form>
 	</TheModal>
 </template>
 
@@ -84,6 +78,7 @@ async function deleteProduct() {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	gap: 14px;
 	padding: 1rem;
 	&__btn {
 		width: 450px;
@@ -108,21 +103,9 @@ async function deleteProduct() {
 			outline-offset: 1px;
 		}
 		&:disabled {
-			background-color: #7B6063;
-			color: #FBFBFB80;
+			background-color: #7b6063;
+			color: #fbfbfb80;
 		}
-	}
-	&__error {
-		width: 100%;
-		padding-left: 3px;
-		padding-bottom: 19px;
-		color: #d40000;
-		font-family: "Raleway";
-		font-size: 15px;
-		font-style: normal;
-		font-weight: 600;
-		line-height: normal;
-		letter-spacing: 0.3px;
 	}
 }
 </style>
