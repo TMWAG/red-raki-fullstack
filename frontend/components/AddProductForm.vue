@@ -32,7 +32,6 @@ function validateName() {
 const description = ref<string>("");
 
 const price = ref<string>("");
-const priceError = ref<string>("");
 
 const notes = ref<string>("");
 
@@ -86,7 +85,6 @@ const sendButtonDisabled = computed(() => {
 	return Boolean(
 		nameError.value ||
 			!name.value ||
-			priceError.value ||
 			!price.value ||
 			imageError.value ||
 			!image.value ||
@@ -163,6 +161,7 @@ const onCreateProduct = async () => {
 			</form>
 			<UIErrorList
 				:errors-list="[
+					nameError,
 					imageError,
 				]"
 			/>
