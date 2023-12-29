@@ -70,18 +70,18 @@ const editButtonsVisibility = computed(() => {
 					Добавить категорию
 				</span>
 			</div>
-			<FormAddCategory
+			<LazyFormCategoryAdd
 				v-if="addModalVisibility"
 				@canceled="hideAddModal"
 				@category-created="onCategoryCreated"
 			/>
-			<FormEditCategory
+			<LazyFormCategoryEdit
 				v-if="categoryToUpdate"
 				:category-to-update="categoryToUpdate"
 				@canceled="hideEditModal"
 				@edited="onCategoryEdited"
 			/>
-			<FormDeleteCategory
+			<LazyFormCategoryDelete
 				v-if="categoryToDelete"
 				:category-to-delete="categoryToDelete"
 				@canceled="hideDelModal"
