@@ -80,19 +80,19 @@ const onProductDeleted = () => {
 				/>
 			</div>
 		</NuxtLayout>
-		<AddProductForm
+		<FormAddProduct
 			:category-id="(categoryId as string)"
 			v-if="addModalVisibility"
 			@canceled="hideAddModal"
 			@product-created="onProductCreated"
 		/>
-		<EditProductModal
+		<FormEditProduct
 			v-if="productToEdit"
 			:product="productToEdit"
 			@closed="hideEditModal"
 			@edited="onProductEdited"
 		/>
-		<DeleteProductModal
+		<FormDeleteProduct
 			v-if="productToDelete"
 			:product="productToDelete"
 			@canceled="hideDelModal"
