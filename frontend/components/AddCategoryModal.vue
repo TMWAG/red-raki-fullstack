@@ -44,20 +44,14 @@ function onModalClose() {
 <template>
 	<TheModal header="Добавление категории" @close="onModalClose">
 		<div class="add-category-modal">
-			<ValidateableInput label="Название новой категории" lg v-slot="s">
-				<input
-					:id="s.id"
-					placeholder="Раки"
-					type="text"
-					class="labeled-input__input lg"
-					v-model="name"
-					@input="validateName"
-					@focus="validateName"
-				/>
-			</ValidateableInput>
-			<span v-show="nameError" class="add-category-modal__error">{{
-				nameError
-			}}</span>
+			<UITextInput
+				label="Название новой категории"
+				placeholder="Раки"
+				v-model="name"
+				@input="validateName"
+				@focus="validateName"
+			/>
+			<UIErrorList :errors-list="[nameError]" />
 			<button
 				class="add-category-modal__btn"
 				@click="addCategory"
@@ -111,8 +105,8 @@ function onModalClose() {
 			outline-offset: 1px;
 		}
 		&:disabled {
-			background-color: #7B6063;
-			color: #FBFBFB80;
+			background-color: #7b6063;
+			color: #fbfbfb80;
 		}
 	}
 }
