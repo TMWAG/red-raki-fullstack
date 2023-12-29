@@ -33,14 +33,6 @@ const description = ref<string>("");
 
 const price = ref<string>("");
 const priceError = ref<string>("");
-const onPriceChange = (e: Event) => {
-	const { value } = e.target as HTMLInputElement;
-	if (!Number(value)) {
-		return;
-	} else {
-		price.value = value;
-	}
-};
 
 const notes = ref<string>("");
 
@@ -136,72 +128,44 @@ const onCreateProduct = async () => {
 <template>
 	<TheModal header="Добавление товара" @close="emit('canceled')">
 		<div class="add-product-form">
-			<div class="add-product-form__inputs">
-				<ValidateableInput label="Название товара" lg v-slot="s">
-					<input
-						:id="s.id"
-						type="text"
-						placeholder="Раки"
-						class="labeled-input__input lg"
-						v-model="name"
-						@input="validateName"
-						@focus="validateName"
-					/>
-				</ValidateableInput>
-				<ValidateableInput label="Описание товара" lg v-slot="s">
-					<textarea
-						:id="s.id"
-						v-model="description"
-						placeholder="Отличная закуска"
-						class="labeled-input__input lg"
-						>{{ description }}</textarea
-					>
-				</ValidateableInput>
-				<ValidateableInput label="Цена за единицу" lg v-slot="s">
-					<input
-						:id="s.id"
-						type="text"
-						placeholder="1200,20"
-						class="labeled-input__input lg"
-						:value="price"
-						v-maska
-						data-maska="0.99"
-						data-maska-tokens="0:\d:multiple|9:\d:optional"
-						@input="onPriceChange"
-					/>
-				</ValidateableInput>
-				<ValidateableInput label="Примечания" lg v-slot="s">
-					<input
-						:id="s.id"
-						type="text"
-						class="labeled-input__input lg"
-						placeholder="Раки до 30 гр; В килограмме примерно 20 штук"
-						v-model="notes"
-					/>
-				</ValidateableInput>
+			<form class="add-product-form__inputs">
+				<UITextInput
+					label="Название товара"
+					placeholder="Раки варёные"
+					v-model="name"
+					@input="validateName"
+					@focus="validateName"
+				/>
+				<UITextInput
+					label="Описание товара"
+					placeholder="Отличная закуска"
+					v-model="description"
+				/>
+				<UINumberInput
+					label="Цена за единицу товара"
+					placeholder="1234.56"
+					v-model="price"
+				/>
+				<UITextInput
+					label="Примечания"
+					placeholder="Раки до 30 гр; В килограмме примерно 20 штук"
+					v-model="notes"
+				/>
 				<ValidateableInput label="Изображение" lg v-slot="s">
 					<input type="file" :id="s.id" @input="onImageChange" />
 				</ValidateableInput>
-				<ValidateableInput label="Категория" lg v-slot="s">
-					<UITheSelect
-						:list="data?.categories"
-						:selected="category"
-						@selected="onSelected"
-						:id="s.id"
-					/>
-				</ValidateableInput>
-			</div>
-			<div class="add-product-form__errors">
-				<span v-show="sendButtonDisabled" class="add-product-form__error">
-					Есть незаполненные поля</span
-				>
-				<span v-show="priceError" class="add-product-form__error">
-					{{ priceError }}</span
-				>
-				<span v-show="imageError" class="add-product-form__error">
-					{{ imageError }}</span
-				>
-			</div>
+				<UITheSelect
+					label="Категория"
+					:list="data?.categories"
+					:selected="category"
+					@selected="onSelected"
+				/>
+			</form>
+			<UIErrorList
+				:errors-list="[
+					imageError,
+				]"
+			/>
 			<button
 				class="add-product-form__btn"
 				:disabled="sendButtonDisabled"
