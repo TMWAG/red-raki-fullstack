@@ -3,6 +3,7 @@ withDefaults(
 	defineProps<{
 		label?: string;
 		placeholder?: string;
+		autocomplete?: "username";
 		modelValue: string;
 	}>(),
 	{
@@ -28,6 +29,7 @@ function updateValue(e: Event) {
       :placeholder="placeholder"
       :value="modelValue"
       @input="updateValue"
+			:autocomplete="autocomplete"
     />
   </UIInputWrapper>
 </template>
