@@ -192,21 +192,6 @@ const onCreateProduct = async () => {
 		align-items: flex-start;
 		gap: 9px;
 	}
-	&__errors {
-		display: flex;
-		flex-direction: column;
-		width: 450px;
-	}
-	&__error {
-		display: block;
-		color: #d40000;
-		font-family: "Raleway";
-		font-size: 13px;
-		font-style: normal;
-		font-weight: 500;
-		line-height: normal;
-		letter-spacing: 0.26px;
-	}
 	&__btn {
 		width: 450px;
 		height: 48px;
