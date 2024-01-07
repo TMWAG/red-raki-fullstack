@@ -18,10 +18,12 @@ const id = `input-id-${Math.floor(Math.random() * 1000)}`;
 .wrapper {
 	display: flex;
 	flex-direction: column;
+	align-items: center;
 	width: 100%;
 	position: relative;
 	gap: 4px;
 	> input {
+		align-self: stretch;
 		background-color: #fbfbfb;
 		border-radius: 8px;
 		border: 1px solid #c0979b;
@@ -61,5 +63,7 @@ const id = `input-id-${Math.floor(Math.random() * 1000)}`;
 	font-weight: 700;
 	line-height: normal;
 	letter-spacing: 0.3px;
+	align-self: flex-start;
+	padding-left: 7px;
 }
 </style>
