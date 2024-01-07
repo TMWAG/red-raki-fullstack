@@ -78,6 +78,7 @@ async function deleteProduct() {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	align-self: stretch;
 	gap: 14px;
 	padding: 1rem;
 	&__btn {

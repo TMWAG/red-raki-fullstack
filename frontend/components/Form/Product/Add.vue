@@ -187,6 +187,7 @@ const onCreateProduct = async () => {
 	gap: 14px;
 	padding: 19px 10px 19px 18px;
 	&__inputs {
+		align-self: stretch;
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
