@@ -125,7 +125,7 @@ const onCreateProduct = async () => {
 
 <template>
 	<TheModal header="Добавление товара" @close="emit('canceled')">
-		<form class="add-product-form">
+		<UIFormWrapper>
 			<UITextInput
 				label="Название товара"
 				placeholder="Раки варёные"
@@ -164,6 +164,6 @@ const onCreateProduct = async () => {
 			>
 				Добавить товар
 			</UITheButton>
-		</form>
+		</UIFormWrapper>
 	</TheModal>
 </template>
