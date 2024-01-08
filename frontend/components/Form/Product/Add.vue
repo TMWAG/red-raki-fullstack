@@ -125,97 +125,45 @@ const onCreateProduct = async () => {
 
 <template>
 	<TheModal header="Добавление товара" @close="emit('canceled')">
-		<div class="add-product-form">
-			<form class="add-product-form__inputs">
-				<UITextInput
-					label="Название товара"
-					placeholder="Раки варёные"
-					v-model="name"
-					@input="validateName"
-					@focus="validateName"
-				/>
-				<UITextInput
-					label="Описание товара"
-					placeholder="Отличная закуска"
-					v-model="description"
-				/>
-				<UINumberInput
-					label="Цена за единицу товара"
-					placeholder="1234.56"
-					v-model="price"
-				/>
-				<UITextInput
-					label="Примечания"
-					placeholder="Раки до 30 гр; В килограмме примерно 20 штук"
-					v-model="notes"
-				/>
-				<ValidateableInput label="Изображение" lg v-slot="s">
-					<input type="file" :id="s.id" @input="onImageChange" />
-				</ValidateableInput>
-				<UITheSelect
-					label="Категория"
-					:list="data?.categories"
-					:selected="category"
-					@selected="onSelected"
-				/>
-			</form>
-			<UIErrorList
-				:errors-list="[
-					nameError,
-					imageError,
-				]"
+		<form class="add-product-form">
+			<UITextInput
+				label="Название товара"
+				placeholder="Раки варёные"
+				v-model="name"
+				@input="validateName"
+				@focus="validateName"
 			/>
-			<button
-				class="add-product-form__btn"
+			<UITextInput
+				label="Описание товара"
+				placeholder="Отличная закуска"
+				v-model="description"
+			/>
+			<UINumberInput
+				label="Цена за единицу товара"
+				placeholder="1234.56"
+				v-model="price"
+			/>
+			<UITextInput
+				label="Примечания"
+				placeholder="Раки до 30 гр; В килограмме примерно 20 штук"
+				v-model="notes"
+			/>
+			<ValidateableInput label="Изображение" lg v-slot="s">
+				<input type="file" :id="s.id" @input="onImageChange" />
+			</ValidateableInput>
+			<UITheSelect
+				label="Категория"
+				:list="data?.categories"
+				:selected="category"
+				@selected="onSelected"
+			/>
+			<UIErrorList :errors-list="[nameError, imageError]" />
+			<UITheButton
 				:disabled="sendButtonDisabled"
 				@click.prevent="onCreateProduct"
 			>
 				Добавить товар
-			</button>
-		</div>
+			</UITheButton>
+		</form>
 	</TheModal>
 </template>
-
-<style lang="scss">
-@use "sass:color";
-.add-product-form {
-	align-items: center;
-	align-items: flex-start;
-	display: flex;
-	display: inline-flex;
-	flex-direction: column;
-	gap: 14px;
-	padding: 19px 10px 19px 18px;
-	&__inputs {
-		align-self: stretch;
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		gap: 9px;
-	}
-	&__btn {
-		width: 450px;
-		height: 48px;
-		border-radius: 8px;
-		background-color: #591c21;
-		color: #fbfbfb;
-		border: none;
-		outline: none;
-		transition: all ease 0.2s;
-		&:disabled {
-			background-color: #7b6063;
-			color: #fbfbfb80;
-			cursor: not-allowed;
-		}
-		&:not(:disabled) {
-			&:hover {
-				background-color: color.adjust($color: #591c21, $lightness: 5%);
-			}
-			&:focus {
-				outline: solid 1px #591c21;
-				outline-offset: 1px;
-			}
-		}
-	}
-}
-</style>
