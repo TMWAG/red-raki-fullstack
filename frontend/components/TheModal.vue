@@ -31,9 +31,7 @@ const emit = defineEmits<{
 						/>
 					</svg>
 				</div>
-				<div class="modal__form-wrapper">
-					<slot />
-				</div>
+				<slot />
 			</div>
 		</Transition>
 	</div>
@@ -78,13 +76,6 @@ const emit = defineEmits<{
 	}
 	&__close {
 		cursor: pointer;
-	}
-	&__form-wrapper {
-		display: flex;
-		align-items: stretch;
-		flex-direction: column;
-		gap: 9px;
-		padding: 19px 19px 18px;
 	}
 }
 </style>
