@@ -52,7 +52,7 @@ async function deleteProduct() {
 		:header="`Удаление товара ${product.name}`"
 		@close="emit('canceled')"
 	>
-		<form class="delete-product-modal">
+		<UIFormWrapper>
 			<UITextInput
 				label="Название товара"
 				:placeholder="product.name"
@@ -61,52 +61,9 @@ async function deleteProduct() {
 				@focus="validateConfirmation"
 			/>
 			<UIErrorList :errors-list="[confirmationError]" />
-			<button
-				class="delete-product-modal__btn"
-				@click.prevent="deleteProduct"
-				:disabled="sendButtonDisabled"
+			<UITheButton @click.prevent="deleteProduct" :disabled="sendButtonDisabled"
+				>Удалить</UITheButton
 			>
-				Удалить
-			</button>
-		</form>
+		</UIFormWrapper>
 	</TheModal>
 </template>
-
-<style lang="scss">
-@use "sass:color";
-.delete-product-modal {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	align-self: stretch;
-	gap: 14px;
-	padding: 1rem;
-	&__btn {
-		width: 450px;
-		height: 48px;
-		border-radius: 8px;
-		background-color: #591c21;
-		outline: none;
-		border: none;
-		text-align: center;
-		font-family: "Raleway";
-		font-size: 20px;
-		font-style: normal;
-		font-weight: 600;
-		line-height: normal;
-		color: #fbfbfb;
-		transition: all ease 0.2s;
-		&:hover {
-			background-color: color.adjust($color: #591c21, $lightness: 5%);
-		}
-		&:focus {
-			outline: 1px solid #591c21;
-			outline-offset: 1px;
-		}
-		&:disabled {
-			background-color: #7b6063;
-			color: #fbfbfb80;
-		}
-	}
-}
-</style>

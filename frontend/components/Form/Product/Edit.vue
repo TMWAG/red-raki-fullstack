@@ -122,99 +122,38 @@ const onSend = async () => {
 		:header="`Изменение товара ${product.name}`"
 		@close="emit('closed')"
 	>
-		<div class="edit-product-form">
-			<form class="edit-product-form__inputs">
-				<UITextInput
-					label="Название товара"
-					:placeholder="product.name"
-					v-model="newName"
-					@input="validateName"
-					@focus="validateName"
-				/>
-				<UITextInput label="Описание товара" v-model="newDescription" />
-				<UINumberInput
-					label="Цена за единицу"
-					v-model="newPrice"
-					placeholder="1234.56"
-				/>
-				<UITextInput
-					label="Примечания"
-					placeholder="Раки до 30 гр; В килограмме примерно 20 штук"
-					v-model="newNotes"
-				/>
-				<ValidateableInput label="Изображение" v-slot="s" lg>
-					<input :id="s.id" type="file" @input="onImageChange" />
-				</ValidateableInput>
-				<UITheSelect
-					label="Категория"
-					:list="data?.categories"
-					:selected="newCategoryName"
-					@selected="onSelected"
-				/>
-			</form>
+		<UIFormWrapper>
+			<UITextInput
+				label="Название товара"
+				:placeholder="product.name"
+				v-model="newName"
+				@input="validateName"
+				@focus="validateName"
+			/>
+			<UITextInput label="Описание товара" v-model="newDescription" />
+			<UINumberInput
+				label="Цена за единицу"
+				v-model="newPrice"
+				placeholder="1234.56"
+			/>
+			<UITextInput
+				label="Примечания"
+				placeholder="Раки до 30 гр; В килограмме примерно 20 штук"
+				v-model="newNotes"
+			/>
+			<ValidateableInput label="Изображение" v-slot="s" lg>
+				<input :id="s.id" type="file" @input="onImageChange" />
+			</ValidateableInput>
+			<UITheSelect
+				label="Категория"
+				:list="data?.categories"
+				:selected="newCategoryName"
+				@selected="onSelected"
+			/>
 			<UIErrorList :errors-list="[nameError, priceError, imageError]" />
-			<button
-				class="edit-product-form__btn"
-				:disabled="sendButtonDisabled"
-				@click.prevent="onSend"
+			<UITheButton @click.prevent="onSend" :disabled="sendButtonDisabled"
+				>Изменить товар</UITheButton
 			>
-				Изменить товар
-			</button>
-		</div>
+		</UIFormWrapper>
 	</TheModal>
 </template>
-
-<style lang="scss">
-@use "sass:color";
-.edit-product-form {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 14px;
-	padding: 1rem;
-	&__inputs {
-		display: flex;
-		flex-direction: column;
-		gap: 6px;
-	}
-	&__errors {
-		display: flex;
-		flex-direction: column;
-		width: 450px;
-	}
-	&__error {
-		display: block;
-		color: #d40000;
-		font-family: "Raleway";
-		font-size: 13px;
-		font-style: normal;
-		font-weight: 500;
-		line-height: normal;
-		letter-spacing: 0.26px;
-	}
-	&__btn {
-		width: 450px;
-		height: 48px;
-		border-radius: 8px;
-		background-color: #591c21;
-		color: #fbfbfb;
-		border: none;
-		outline: none;
-		transition: all ease 0.2s;
-		&:disabled {
-			background-color: #7b6063;
-			color: #fbfbfb80;
-			cursor: not-allowed;
-		}
-		&:not(:disabled) {
-			&:hover {
-				background-color: color.adjust($color: #591c21, $lightness: 5%);
-			}
-			&:focus {
-				outline: solid 1px #591c21;
-				outline-offset: 1px;
-			}
-		}
-	}
-}
-</style>
