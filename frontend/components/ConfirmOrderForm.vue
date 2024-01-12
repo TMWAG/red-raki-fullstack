@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const emit = defineEmits<{
-	(e: 'confirmed', phone: string, address: string): void
+	(e: "confirmed", phone: string, address: string): void;
 }>();
 
 const phone = ref<string>(useCookie("phone").value || "");
@@ -15,51 +15,50 @@ const isUserAuthorized = Boolean(
 
 <template>
 	<form class="confirm-order-form">
-		<div>
-			<ValidateableInput label="Номер телефона" lg v-slot="s">
-				<input
-					:id="s.id"
-					type="tel"
-					placeholder="+7 (999) 333 - 22 - 11"
-					v-maska
-					data-maska="+7(###)###-##-##"
-					class="labeled-input__input labeled-input__input_lg"
-					v-model="phone"
-					:disabled="isUserAuthorized"
-				/>
-			</ValidateableInput>
-			<ValidateableInput label="Адрес" lg v-slot="s">
-				<input
-					:id="s.id"
-					type="text"
-					placeholder="Королёв, Терешковой, 12"
-					v-model="address"
-					class="labeled-input__input labeled-input__input_lg"
-				/>
-			</ValidateableInput>
-			<button class="confirm-order-form__btn" @click.prevent="emit('confirmed', phone, address)">Оформить заказ</button>
-		</div>
-		<p>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse enim natus,
-			cum incidunt odio quae autem sequi atque vero porro laudantium? Ducimus et
-			adipisci temporibus ut alias quisquam optio odit.
-		</p>
+		<ValidateableInput label="Номер телефона" v-slot="s">
+			<input
+				:id="s.id"
+				type="tel"
+				placeholder="+7 (999) 333 - 22 - 11"
+				v-maska
+				data-maska="+7(###)###-##-##"
+				class="labeled-input__input sm"
+				v-model="phone"
+				:disabled="isUserAuthorized"
+			/>
+		</ValidateableInput>
+		<ValidateableInput label="Адрес" v-slot="s">
+			<input
+				:id="s.id"
+				type="text"
+				placeholder="Королёв, Терешковой, 12"
+				v-model="address"
+				class="labeled-input__input sm"
+			/>
+		</ValidateableInput>
+		<button
+			class="confirm-order-form__btn"
+			@click.prevent="emit('confirmed', phone, address)"
+		>
+			Оформить заказ
+		</button>
 	</form>
 </template>
 
 <style lang="scss">
 @use "sass:color";
 .confirm-order-form {
-	background-color: whitesmoke;
-	border: 2px solid darkred;
-	border-radius: 5px;
-	padding: 1rem;
-	display: grid;
+	background-color: #ebe3e1;
+	border-radius: 24px;
+	padding: 20px;
+	gap: 14px;
+	display: flex;
+	flex-direction: column;
 	align-items: center;
-	grid-template-columns: 4fr 8fr;
+	justify-content: center;
 	&__btn {
-		width: 374px;
-		height: 48px;
+		width: 187px;
+		height: 36px;
 		border-radius: 8px;
 		background-color: #591c21;
 		color: #fbfbfb;
