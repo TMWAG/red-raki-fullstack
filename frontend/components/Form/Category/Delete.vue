@@ -56,7 +56,7 @@ function onModalClose() {
 		@close="onModalClose"
 		:header="`Удаление категории ${categoryToDelete.name}`"
 	>
-		<form class="delete-category-modal">
+		<UIFormWrapper>
 			<UITextInput
 				label="Название удаляемой категории"
 				:placeholder="categoryToDelete.name"
@@ -64,56 +64,13 @@ function onModalClose() {
 				@input="validateConfirmation"
 				@focus="validateConfirmation"
 			/>
-			<UIErrorList
-				:errors-list="[
-					confirmationError,
-				]"
-			/>
-			<button
-				class="delete-category-modal__btn"
+			<UIErrorList :errors-list="[confirmationError]" />
+			<UITheButton
 				@click.prevent="deleteCategory"
-				:disabled="deleteConfirmation !== props.categoryToDelete.name"
+				:disabled="deleteConfirmation !== categoryToDelete.name"
 			>
 				Удалить категорию
-			</button>
-		</form>
+			</UITheButton>
+		</UIFormWrapper>
 	</TheModal>
 </template>
-
-<style lang="scss">
-@use "sass:color";
-.delete-category-modal {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 0.5rem 0;
-	padding: 1rem;
-	&__btn {
-		width: 450px;
-		height: 48px;
-		border-radius: 8px;
-		background-color: #591c21;
-		outline: none;
-		border: none;
-		text-align: center;
-		font-family: "Raleway";
-		font-size: 20px;
-		font-style: normal;
-		font-weight: 600;
-		line-height: normal;
-		color: #fbfbfb;
-		transition: all ease 0.2s;
-		&:hover {
-			background-color: color.adjust($color: #591c21, $lightness: 5%);
-		}
-		&:focus {
-			outline: 1px solid #591c21;
-			outline-offset: 1px;
-		}
-		&:disabled {
-			background-color: #7b6063;
-			color: #fbfbfb80;
-		}
-	}
-}
-</style>

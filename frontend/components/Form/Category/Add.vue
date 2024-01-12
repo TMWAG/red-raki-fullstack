@@ -52,51 +52,22 @@ function onModalClose() {
 				@focus="validateName"
 			/>
 			<UIErrorList :errors-list="[nameError]" />
-			<button
-				class="add-category-modal__btn"
+			<UITheButton
 				@click.prevent="addCategory"
 				:disabled="nameError.length !== 0 || name.length === 0"
 			>
 				Добавить категорию
-			</button>
+			</UITheButton>
 		</form>
 	</TheModal>
 </template>
 
 <style lang="scss">
-@use "sass:color";
 .add-category-modal {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	gap: 0.5rem 0;
 	padding: 1rem;
-	&__btn {
-		width: 450px;
-		height: 48px;
-		border-radius: 8px;
-		background-color: #591c21;
-		outline: none;
-		border: none;
-		text-align: center;
-		font-family: "Raleway";
-		font-size: 20px;
-		font-style: normal;
-		font-weight: 600;
-		line-height: normal;
-		color: #fbfbfb;
-		transition: all ease 0.2s;
-		&:hover {
-			background-color: color.adjust($color: #591c21, $lightness: 5%);
-		}
-		&:focus {
-			outline: 1px solid #591c21;
-			outline-offset: 1px;
-		}
-		&:disabled {
-			background-color: #7b6063;
-			color: #fbfbfb80;
-		}
-	}
 }
 </style>

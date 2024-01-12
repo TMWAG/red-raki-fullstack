@@ -59,7 +59,7 @@ onMounted(() => {
 		@close="onModalClose"
 		:header="`Изменение категории ${categoryToUpdate.name}`"
 	>
-		<form class="edit-category-modal">
+		<UIFormWrapper>
 			<UITextInput
 				label="Новое название категории"
 				placeholder="Раки"
@@ -67,56 +67,13 @@ onMounted(() => {
 				@input="validateNewName"
 				@focus="validateNewName"
 			/>
-			<UIErrorList
-				:errors-list="[
-					newNameError
-				]"
-			/>
-			<button
-				class="edit-category-modal__btn"
+			<UIErrorList :errors-list="[newNameError]" />
+			<UITheButton
 				@click.prevent="updateCategory"
 				:disabled="newNameError.length !== 0"
+				>Сохранить изменения</UITheButton
 			>
-				Сохранить изменения
-			</button>
-		</form>
+		</UIFormWrapper>
 	</TheModal>
 </template>
 
-<style lang="scss">
-@use "sass:color";
-.edit-category-modal {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 0.5rem 0;
-	padding: 1rem;
-	&__btn {
-		width: 450px;
-		height: 48px;
-		border-radius: 8px;
-		background-color: #591c21;
-		outline: none;
-		border: none;
-		text-align: center;
-		font-family: "Raleway";
-		font-size: 20px;
-		font-style: normal;
-		font-weight: 600;
-		line-height: normal;
-		color: #fbfbfb;
-		transition: all ease 0.2s;
-		&:hover {
-			background-color: color.adjust($color: #591c21, $lightness: 5%);
-		}
-		&:focus {
-			outline: 1px solid #591c21;
-			outline-offset: 1px;
-		}
-		&:disabled {
-			background-color: #7B6063;
-			color: #FBFBFB80;
-		}
-	}
-}
-</style>
