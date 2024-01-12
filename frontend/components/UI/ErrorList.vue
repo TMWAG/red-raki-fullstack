@@ -7,8 +7,8 @@ defineProps<{
 <template>
 	<div :class="$style.list">
 		<p
-			v-for="e in errorsList"
-			:key="`error-${e}`"
+			v-for="(e, i) in errorsList"
+			:key="`error-${e}-${i}`"
 			:class="$style.item"
 			v-show="e"
 		>
