@@ -19,6 +19,13 @@ export const createUserSchema = Type.Object({
 
 export type CreateUserInput = Static<typeof createUserSchema>;
 
+export const changePasswordSchema = Type.Object({
+	oldPassword: Type.String(),
+	newPassword: Type.String(),
+});
+
+export type ChangePasswordInput = Static<typeof changePasswordSchema>;
+
 export const createUserResponseSchema = Type.Object({
 	login: Type.String(),
 	name: Type.String(),
