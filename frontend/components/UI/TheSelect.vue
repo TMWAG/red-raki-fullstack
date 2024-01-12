@@ -41,7 +41,7 @@ function select(id: string) {
 
 <style lang="scss">
 .select {
-	width: 450px;
+	width: 100%;
 	&__list {
 		height: 44px;
 		border-radius: 8px;
@@ -68,14 +68,14 @@ function select(id: string) {
 		box-shadow: 0px 0px 8px 2px rgba(0, 0, 0, 0.25); 
 		border-radius: 4px;
 		padding: 2px;
-    width: 450px;
+    width: 100%;
 		&_hidden {
 			display: none;
 		}
 	}
 	&__item {
 		padding: 2.5px;
-		width: 446px;
+		width: 100%;
 		height: 26px;
 		transition: all ease 0.2s;
 		border-radius: 2px;
