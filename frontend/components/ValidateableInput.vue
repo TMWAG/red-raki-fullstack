@@ -12,7 +12,7 @@ const id = `input-${String(Math.floor(Math.random() * 1000))}`;
 		<label
 			:for="id"
 			class="labeled-input__label"
-			:class="lg ? 'labeled-input__label_lg' : ''"
+			:class="{lg : 'labeled-input__label_lg'}"
 		>
 			{{ label }}
 		</label>
