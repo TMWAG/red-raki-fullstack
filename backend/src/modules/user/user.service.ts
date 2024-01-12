@@ -1,10 +1,15 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { CreateUserInput, LoginUserInput } from "./user.schema";
+import {
+	ChangePasswordInput,
+	CreateUserInput,
+	LoginUserInput,
+} from "./user.schema";
 import bcrypt from "bcryptjs";
 import prisma from "../../utils/prisma";
 import { app } from "../..";
 import { randomUUID } from "crypto";
 import { transliterate } from "../../utils/tansliterate";
+import { JwtPayload } from "../../@types";
 
 /* export async function registerUserHandler(
 	req: FastifyRequest<{ Body: CreateUserInput }>,
@@ -37,7 +42,9 @@ export async function addSupervisorHandler(
 	req: FastifyRequest<{ Body: CreateUserInput }>,
 	rep: FastifyReply
 ) {
-	const login = `${transliterate(req.body.name)}_${transliterate(req.body.surname)}`;
+	const login = `${transliterate(req.body.name)}_${transliterate(
+		req.body.surname
+	)}`;
 	const newSupervisor = await prisma.employee.create({
 		data: {
 			password: await bcrypt.hash(login, 10),
@@ -50,6 +57,38 @@ export async function addSupervisorHandler(
 	return rep.code(201).send(newSupervisor);
 }
 
+export async function changePasswordHandler(
+	req: FastifyRequest<{ Body: ChangePasswordInput }>,
+	rep: FastifyReply
+) {
+	const user = await prisma.employee.findUnique({
+		where: {
+			id: (req.user as JwtPayload).id,
+		},
+	});
+	if (!user) {
+		return rep.code(404).send({
+			error: "USR_CPW_NF",
+			message: "Пользователь не найден",
+			detail: "Пользователь с данной подписью не числится",
+		});
+	}
+	if (!(await bcrypt.compare(req.body.oldPassword, user.password))) {
+		return rep.code(400).send({
+			error: "USR_CPW_WPW",
+			message: "Указан неверный пароль",
+			detail: "Старый пароль указан неверно",
+		});
+	}
+	await prisma.employee.update({
+		where: { id: user.id },
+		data: {
+			password: await bcrypt.hash(req.body.newPassword, 10),
+		},
+	});
+	return rep.code(200).send();
+}
+
 export async function loginUserHandler(
 	req: FastifyRequest<{ Body: LoginUserInput }>,
 	rep: FastifyReply
@@ -59,22 +98,22 @@ export async function loginUserHandler(
 	});
 	if (!user) {
 		return rep.code(404).send({
-      error: "USR_LGN_NF",
-      message: "Пользователь не найден",
-      detail: `Пользователь с логином ${req.body.login} не найден`,
-    });
+			error: "USR_LGN_NF",
+			message: "Пользователь не найден",
+			detail: `Пользователь с логином ${req.body.login} не найден`,
+		});
 	}
-  if (!(await bcrypt.compare(req.body.password, user.password!))) {
-    return rep.code(400).send({
-      error: "USR_LGN_WPW",
-      message: "Неверный пароль",
-      detail: "Указан неверный пароль",
-    })
-  }
+	if (!(await bcrypt.compare(req.body.password, user.password!))) {
+		return rep.code(400).send({
+			error: "USR_LGN_WPW",
+			message: "Неверный пароль",
+			detail: "Указан неверный пароль",
+		});
+	}
 	return rep.send({
 		...user,
 		token: app.jwt.sign({ id: user.id }),
-	});	
+	});
 }
 
 export async function getAllUsersHandler(
