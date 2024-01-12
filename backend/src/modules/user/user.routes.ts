@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
-import { addSupervisorHandler, getAllUsersHandler, loginUserHandler, /* loginUserHandler */ } from "./user.service";
-import { CreateUserInput, createUserResponseSchema, createUserSchema, getAllUsersResponseSchema, loginUserResponseSchema, loginUserSchema } from "./user.schema";
+import { addSupervisorHandler, changePasswordHandler, getAllUsersHandler, loginUserHandler, /* loginUserHandler */ } from "./user.service";
+import { ChangePasswordInput, CreateUserInput, changePasswordSchema, createUserResponseSchema, createUserSchema, getAllUsersResponseSchema, loginUserResponseSchema, loginUserSchema } from "./user.schema";
 import { errorResponseSchema } from "../../utils/errorResponseSchema";
 
 export default async function userRoutes(app: FastifyInstance) {
@@ -43,6 +43,16 @@ export default async function userRoutes(app: FastifyInstance) {
       },
     },
     addSupervisorHandler
+  );
+  app.patch<{ Body: ChangePasswordInput }>(
+    '/change_password',
+    {
+      preHandler: [app.authenticate],
+      schema: {
+        body: changePasswordSchema,
+      }
+    },
+    changePasswordHandler
   );
   app.get(
     '/all',
