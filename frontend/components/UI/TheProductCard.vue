@@ -17,8 +17,6 @@ const role = useCookie("role");
 const editButtonsVisibility = computed(() => {
 	return role.value === "ADMIN" || role.value === "SUPERVISOR";
 });
-
-const cartStore = useCartStore();
 </script>
 
 <template>
@@ -110,30 +108,11 @@ const cartStore = useCartStore();
 					})
 				}}
 			</span>
-			<div
-				v-if="cartStore.isInCart(product.id)"
-				class="product-card__cart-control-btn-count"
-			>
-				<button
-					class="product-card__cart-control-btn"
-					@click="cartStore.removeProduct(product.id)"
-				>
-					-
-				</button>
-				<span class="product-card__cart-control-count">{{ cartStore.isInCart(product.id) }}</span>
-				<button
-					class="product-card__cart-control-btn"
-					@click="cartStore.addProduct(product)"
-				>
-					+
-				</button>
-			</div>
 			<button
-				v-else
 				class="product-card__cart-btn"
 				@click="emit('add-to-cart')"
 			>
-				В корзину
+				Заказать
 			</button>
 		</div>
 	</div>
