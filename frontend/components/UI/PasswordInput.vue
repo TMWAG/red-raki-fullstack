@@ -13,7 +13,8 @@ withDefaults(
 );
 
 const emit = defineEmits<{
-	(e: "update:modelValue", value: string): void;
+	(e: "update:model-value", value: string): void;
+	(e: "focus"): void;
 }>();
 
 const inputType = ref<"password" | "text">("password");
@@ -27,7 +28,7 @@ function togglePasswordVisibility() {
 }
 
 function updateValue(e: Event) {
-	emit("update:modelValue", (e.target as HTMLInputElement).value);
+	emit("update:model-value", (e.target as HTMLInputElement).value);
 }
 </script>
 
@@ -40,6 +41,7 @@ function updateValue(e: Event) {
 			:value="modelValue"
 			:autocomplete="autocomplete"
 			@input="updateValue"
+			@focus="emit('focus')"
 		/>
 		<button :class="$style.switch" @click.prevent="togglePasswordVisibility">
 			<svg
