@@ -21,7 +21,7 @@ const totalPrice = computed(() =>
 </script>
 
 <template>
-	<div class="ordered_product_card">
+	<div class="ordered-product-card">
 		<div class="product_info">
 			<span class="product_number">
 				{{ number }}
@@ -45,13 +45,13 @@ const totalPrice = computed(() =>
 </template>
 
 <style lang="scss" scoped>
-.ordered_product_card {
+.ordered-product-card {
 	display: grid;
 	grid-template-columns: 10fr 2fr;
 	align-items: stretch;
-	border: 2px solid ;
-	border-radius: 5px;
+	border-radius: 24px;
 	padding: 1rem;
+	background-color: #EBE3E1;
 	.product_info {
 		display: grid;
 		grid-template-columns: 0.25fr 1fr 3fr 1fr 1fr;
